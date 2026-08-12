@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Hub de Gestação">
+  <meta property="og:image" content="https://brib.baby/images/seo.jpg">
   <title>Hub de Gestação</title>
   <link rel="icon" type="image/webp" href="images/icon.webp">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -397,9 +398,13 @@ button {
   box-shadow: 0 0 0 1px var(--peach);
 }
 
-.milestone.active .milestone-dot {
-  background: var(--terracotta);
-  box-shadow: 0 0 0 1px var(--terracotta), 0 0 0 6px rgba(200,93,61,.12);
+.milestone.current .milestone-dot {
+    background: var(--terracotta);
+    box-shadow:
+        0 0 0 1px var(--terracotta),
+        0 0 0 6px rgba(200,93,61,.12);
+
+    animation: milestonePulse 1.8s ease-in-out infinite;
 }
 
 .milestone strong { display: block; font-size: .92rem; }
@@ -594,20 +599,61 @@ button {
 }
 
 /* Tablet / desktop */
-@media (min-width: 700px) {
-  .hero { padding: 64px 32px 44px; text-align: center;}
-  .hero h1 { font-size: 3rem; }
-  .age-card { max-width: 760px; margin: 0 auto; padding: 38px; }
-  .age-main > span:not(.age-and) { font-size: 4.5rem; }
-  .birth-editor { max-width: 760px; margin: 22px auto 0; }
-  .stats-grid { grid-template-columns: repeat(3, minmax(120px, 190px)); }
-  .quote-card { padding: 40px; }
-  .quote-card p { font-size: 1.8rem; max-width: 760px; }
-  .timeline { grid-template-columns: repeat(6, 1fr); padding: 0; gap: 8px; }
-  .timeline::before { top: 8px; left: 8px; right: 8px; bottom: auto; width: auto; height: 1px; }
-  .milestone { display: block; min-height: 100px; }
-  .milestone-dot { margin-bottom: 13px; }
-  .comment-form { padding: 28px; }
+@media (min-width: 900px) {
+
+    .timeline {
+        grid-template-columns: repeat(4, 1fr);
+        padding: 0;
+        gap: 8px;
+    }
+
+    .timeline::before {
+        display: none;
+    }
+
+    .milestone {
+        display: block;
+        min-height: 100px;
+        position: relative;
+    }
+
+    .milestone::after {
+        content: "";
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        right: -8px;
+        height: 1px;
+        background: var(--line);
+        z-index: 0;
+    }
+
+    /* Último item de cada linha não desenha linha */
+    .milestone:nth-child(4n)::after,
+    .milestone:last-child::after {
+        display: none;
+    }
+
+    .milestone-dot {
+        position: relative;
+        z-index: 1;
+        margin-bottom: 13px;
+    }
+
+    .comment-form {
+        padding: 28px;
+    }
+}
+
+@keyframes milestonePulse {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(0.75);
+    }
 }
 
 @media (min-width: 1000px) {
@@ -664,8 +710,8 @@ button {
 <body>
   <main class="app">
     <section class="hero" aria-labelledby="page-title">
-      <div class="eyebrow">PRÉ-NATAL</div>
-      <h1 id="page-title">BABY AGE</h1>
+      <div class="eyebrow">HUB DE GESTAÇÃO</div>
+      <h1 id="page-title">PRÉ-NATAL</h1>
       <p class="hero-subtitle">Pequenos momentos, grandes descobertas.</p>
 
       <div class="age-card">
@@ -809,7 +855,7 @@ button {
 
     <footer class="footer">
       <span>Com amor,</span>
-      <strong>By Papai 🧡</strong>
+      <strong>By Papai 🤎</strong>
     </footer>
   </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1029,12 +1075,21 @@ function updateMilestones(now) {
 
   const currentAge = calculateGestationalAge(now);
 
-  milestones.forEach((item) => {
+const currentMilestoneIndex = milestones.reduce(
+    (index, item, i) => {
+        return currentAge.totalDays >= item.weeks * 7
+            ? i
+            : index;
+    },
+    0
+);
+
+milestones.forEach((item, index) => {
 
     const milestoneTotalDays = item.weeks * 7;
 
-    const active =
-      currentAge.totalDays >= milestoneTotalDays;
+    const isCurrent = index === currentMilestoneIndex;
+    const isCompleted = index < currentMilestoneIndex;
 
     const milestoneDate =
       getGestationalDate(item.weeks);
@@ -1043,7 +1098,11 @@ function updateMilestones(now) {
       document.createElement("article");
 
     article.className =
-      `milestone ${active ? "active" : ""}`;
+      `milestone ${
+          isCurrent ? "current" :
+          isCompleted ? "completed" :
+          ""
+      }`;
 
     article.innerHTML = `
       <div class="milestone-dot" aria-hidden="true"></div>
