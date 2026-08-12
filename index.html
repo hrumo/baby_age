@@ -599,6 +599,35 @@ button {
 }
 
 /* Tablet / desktop */
+
+
+@media (min-width: 700px) {
+
+    .hero {
+        padding: 64px 32px 44px;
+        text-align: center;
+    }
+
+    .hero h1 {
+        font-size: 3rem;
+    }
+
+    .age-card {
+      width: min(100% - 40px, 1080px);
+        margin: 0 auto;
+        padding: 38px;
+    }
+
+    .age-main > span:not(.age-and) {
+        font-size: 4.5rem;
+    }
+
+    .birth-editor {
+        max-width: 760px;
+        margin: 22px auto 0;
+    }
+}
+
 @media (min-width: 900px) {
 
     .timeline {
