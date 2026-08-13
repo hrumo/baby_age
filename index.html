@@ -71,58 +71,160 @@
     </section>
 
     <section class="today section">
-      <div class="quote-card">
-        <span class="quote-mark">✦</span>
-        <p id="dailyPhrase">Hoje é mais um capítulo de uma história que está só começando.</p>
-      <div class="quote-sign">6ª semana</div>
+          <div class="quote-card">
+            <span class="quote-mark">✦</span>
+            <p id="dailyPhrase">Hoje é mais um capítulo de uma história que está só começando.</p>
+          <div class="quote-sign">6ª semana</div>
+          </div>
+        </section>
+      <section class="updates section">
+
+      <div class="section-heading">
+
+        <span class="section-kicker">
+          ACOMPANHAMENTO
+        </span>
+
+        <h2>
+          Atualizações
+        </h2>
+
+        <p>
+          Pequenos momentos que queremos guardar dessa história.
+        </p>
+
       </div>
+
+
+    <div class="updates-wrapper">
+
+      <button
+        class="updates-arrow updates-arrow-prev"
+        type="button"
+        aria-label="Ver atualizações anteriores"
+      >
+        ←
+      </button>
+
+      <div
+        class="updates-slider"
+        id="updatesList"
+        aria-live="polite"
+      ></div>
+
+      <button
+        class="updates-arrow updates-arrow-next"
+        type="button"
+        aria-label="Ver próximas atualizações"
+      >
+        →
+      </button>
+
+    </div>
     </section>
-   <section class="updates section">
 
-  <div class="section-heading">
+        <!-- =====================================================
+         NEWSLETTER
+         ===================================================== -->
 
-    <span class="section-kicker">
-      ACOMPANHAMENTO
-    </span>
+    <section class="newsletter section" id="newsletter">
 
-    <h2>
-      Atualizações
-    </h2>
+      <div class="newsletter-card">
 
-    <p>
-      Pequenos momentos que queremos guardar dessa história.
-    </p>
+        <div class="newsletter-content">
 
-  </div>
+          <span class="section-kicker">
+            FIQUE POR PERTO
+          </span>
+
+          <h2>
+            Receba próximos capítulos.
+          </h2>
+
+          <p>
+            Quando uma nova história for registrada por aqui,
+            queremos que você seja um dos primeiros a saber.
+          </p>
+
+        </div>
 
 
-<div class="updates-wrapper">
+        <form
+          id="newsletterForm"
+          class="newsletter-form"
+        >
 
-  <button
-    class="updates-arrow updates-arrow-prev"
-    type="button"
-    aria-label="Ver atualizações anteriores"
-  >
-    ←
-  </button>
+          <div class="newsletter-fields">
 
-  <div
-    class="updates-slider"
-    id="updatesList"
-    aria-live="polite"
-  ></div>
+            <div class="newsletter-field">
 
-  <button
-    class="updates-arrow updates-arrow-next"
-    type="button"
-    aria-label="Ver próximas atualizações"
-  >
-    →
-  </button>
+              <label for="newsletterName">
+                Primeiro nome
+              </label>
 
-</div>
+              <input
+                id="newsletterName"
+                name="name"
+                type="text"
+                maxlength="60"
+                placeholder="Como podemos te chamar?"
+                autocomplete="given-name"
+                required
+              >
 
-</section>
+            </div>
+
+
+            <div class="newsletter-field">
+
+              <label for="newsletterEmail">
+                Melhor e-mail
+              </label>
+
+              <input
+                id="newsletterEmail"
+                name="email"
+                type="email"
+                maxlength="120"
+                placeholder="seuemail@exemplo.com"
+                autocomplete="email"
+                required
+              >
+
+            </div>
+
+          </div>
+
+
+          <button
+            type="submit"
+            class="newsletter-submit"
+            aria-label="Assinar newsletter"
+          >
+
+            <img
+              src="images/send.webp"
+              alt=""
+              class="newsletter-submit-icon"
+            >
+
+          </button>
+
+        </form>
+
+
+        <p
+          class="newsletter-note"
+          id="newsletterNote"
+          aria-live="polite"
+        >
+          Sem spam. Só os próximos momentos dessa história. ♥
+        </p>
+
+      </div>
+
+    </section>
+
     <section class="milestones section">
       <div class="section-heading">
         <span class="section-kicker">LINHA DO TEMPO</span>
@@ -220,5 +322,6 @@
   </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
+<script src="newsletter.js"></script>
 </body>
 </html>

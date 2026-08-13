@@ -172,3 +172,75 @@
   }
 
 }
+
+/* =========================================================
+   ATUALIZAÇÕES — ESTADO VAZIO EM DESKTOP
+   ========================================================= */
+
+@media (min-width: 900px) {
+
+  .updates-slider:has(.empty-updates) {
+    display: block;
+    overflow: visible;
+  }
+
+  .updates-slider .empty-updates {
+    width: 100%;
+    max-width: none;
+
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+
+}
+
+/* =========================================================
+   NEWSLETTER — TABLET / DESKTOP
+   ========================================================= */
+
+@media (min-width: 700px) {
+
+  .newsletter {
+    padding-top: 54px;
+  }
+
+  .newsletter-card {
+    padding: 48px 42px;
+    border-radius: 26px;
+  }
+
+  .newsletter-content h2 {
+    font-size: 1.9rem;
+  }
+
+  .newsletter-content p {
+    max-width: 560px;
+    font-size: .85rem;
+    line-height: 1.4;
+  }
+
+  .newsletter-form {
+    display: flex;
+    align-items: center;
+
+    max-width: 760px;
+
+    margin: 26px auto 0;
+  }
+
+  .newsletter-fields {
+    flex: 1;
+
+    display: grid;
+    grid-template-columns: 1fr 1.25fr;
+
+    gap: 10px;
+  }
+
+  .newsletter-submit {
+    flex: 0 0 52px;
+
+    margin: 0 0 0 10px;
+  }
+
+}

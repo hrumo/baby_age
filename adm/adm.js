@@ -37,13 +37,37 @@ const ADMIN_EMAILS = [
 
 const POSTS_BUCKET = "post-banners";
 
-const MAX_BANNER_SIZE = 5 * 1024 * 1024;
+const MAX_ORIGINAL_BANNER_SIZE = 15 * 1024 * 1024;
+const MAX_FINAL_BANNER_SIZE = 5 * 1024 * 1024;
+
+const MAX_BANNER_WIDTH = 600;
+const MAX_BANNER_HEIGHT = 800;
+
+const WEBP_QUALITY = 0.85;
+
+const ALLOWED_BANNER_EXTENSIONS = [
+  "jpg",
+  "jpeg",
+  "png",
+  "webp",
+  "gif"
+];
 
 const ALLOWED_BANNER_TYPES = [
   "image/jpeg",
   "image/png",
   "image/webp",
   "image/gif"
+];
+
+const HEIC_EXTENSIONS = [
+  "heic",
+  "heif"
+];
+
+const HEIC_TYPES = [
+  "image/heic",
+  "image/heif"
 ];
 
 
@@ -295,6 +319,17 @@ async function handleLogin(event) {
    VALIDAÇÃO DO BANNER
    ========================================================= */
 
+function getFileExtension(file) {
+
+  return file.name
+    .split(".")
+    .pop()
+    .toLowerCase()
+    .trim();
+
+}
+
+
 function validateBanner(file) {
 
   if (!file) {
@@ -307,7 +342,36 @@ function validateBanner(file) {
   }
 
 
-  if (!ALLOWED_BANNER_TYPES.includes(file.type)) {
+  const extension =
+    getFileExtension(file);
+
+
+  /* -------------------------------------------------------
+     HEIC / HEIF
+     ------------------------------------------------------- */
+
+  if (
+    HEIC_EXTENSIONS.includes(extension) ||
+    HEIC_TYPES.includes(file.type)
+  ) {
+
+    return {
+      valid: false,
+      heic: true,
+      message:
+        "Este dispositivo enviou uma imagem HEIC/HEIF. Converta a imagem para JPG ou WEBP antes de enviar."
+    };
+
+  }
+
+
+  /* -------------------------------------------------------
+     EXTENSÃO
+     ------------------------------------------------------- */
+
+  if (
+    !ALLOWED_BANNER_EXTENSIONS.includes(extension)
+  ) {
 
     return {
       valid: false,
@@ -318,12 +382,39 @@ function validateBanner(file) {
   }
 
 
-  if (file.size > MAX_BANNER_SIZE) {
+  /* -------------------------------------------------------
+     MIME
+     
+     Alguns dispositivos podem não informar o MIME.
+     Nesse caso, confiamos na extensão.
+     ------------------------------------------------------- */
+
+  if (
+    file.type &&
+    !ALLOWED_BANNER_TYPES.includes(file.type)
+  ) {
 
     return {
       valid: false,
       message:
-        "O banner deve ter no máximo 5 MB."
+        "O navegador identificou um formato de imagem incompatível. Tente salvar a imagem como JPG ou WEBP."
+    };
+
+  }
+
+
+  /* -------------------------------------------------------
+     TAMANHO ORIGINAL
+     ------------------------------------------------------- */
+
+  if (
+    file.size > MAX_ORIGINAL_BANNER_SIZE
+  ) {
+
+    return {
+      valid: false,
+      message:
+        "O arquivo original deve ter no máximo 15 MB."
     };
 
   }
@@ -332,8 +423,207 @@ function validateBanner(file) {
   return {
     valid: true
   };
+
 }
 
+async function prepareBanner(file) {
+
+  const extension =
+    getFileExtension(file);
+
+
+  /* -------------------------------------------------------
+     GIF
+     
+     Mantemos GIF como GIF para não destruir animações.
+     ------------------------------------------------------- */
+
+  if (extension === "gif") {
+
+    return {
+      file,
+      converted: false
+    };
+
+  }
+
+
+  /* -------------------------------------------------------
+     CRIAR URL TEMPORÁRIA
+     ------------------------------------------------------- */
+
+  const objectUrl =
+    URL.createObjectURL(file);
+
+
+  try {
+
+    const image =
+      await loadImage(objectUrl);
+
+
+    /* -----------------------------------------------------
+       DIMENSÕES PROPORCIONAIS
+       ----------------------------------------------------- */
+
+    let width =
+      image.naturalWidth;
+
+    let height =
+      image.naturalHeight;
+
+
+    const scale =
+      Math.min(
+        1,
+        MAX_BANNER_WIDTH / width,
+        MAX_BANNER_HEIGHT / height
+      );
+
+
+    width =
+      Math.round(width * scale);
+
+    height =
+      Math.round(height * scale);
+
+
+    /* -----------------------------------------------------
+       CANVAS
+       ----------------------------------------------------- */
+
+    const canvas =
+      document.createElement("canvas");
+
+
+    canvas.width =
+      width;
+
+    canvas.height =
+      height;
+
+
+    const context =
+      canvas.getContext("2d");
+
+
+    if (!context) {
+
+      throw new Error(
+        "Não foi possível preparar a imagem."
+      );
+
+    }
+
+
+    context.drawImage(
+      image,
+      0,
+      0,
+      width,
+      height
+    );
+
+
+    /* -----------------------------------------------------
+       CONVERSÃO PARA WEBP
+       ----------------------------------------------------- */
+
+    const blob =
+      await new Promise((resolve) => {
+
+        canvas.toBlob(
+          resolve,
+          "image/webp",
+          WEBP_QUALITY
+        );
+
+      });
+
+
+    if (!blob) {
+
+      throw new Error(
+        "Não foi possível converter a imagem para WebP."
+      );
+
+    }
+
+
+    /* -----------------------------------------------------
+       VERIFICAR TAMANHO FINAL
+       ----------------------------------------------------- */
+
+    if (
+      blob.size > MAX_FINAL_BANNER_SIZE
+    ) {
+
+      throw new Error(
+        "A imagem continua muito grande após a conversão. Tente utilizar uma imagem menor."
+      );
+
+    }
+
+
+    const convertedFile =
+      new File(
+        [blob],
+        `${Date.now()}.webp`,
+        {
+          type: "image/webp",
+          lastModified: Date.now()
+        }
+      );
+
+
+    return {
+      file: convertedFile,
+      converted: true
+    };
+
+
+  } finally {
+
+    URL.revokeObjectURL(objectUrl);
+
+  }
+
+}
+
+
+function loadImage(source) {
+
+  return new Promise(
+    (resolve, reject) => {
+
+      const image =
+        new Image();
+
+
+      image.onload = () => {
+
+        resolve(image);
+
+      };
+
+
+      image.onerror = () => {
+
+        reject(
+          new Error(
+            "O navegador não conseguiu ler esta imagem. Verifique se o arquivo é realmente uma imagem JPG, PNG ou WEBP."
+          )
+        );
+
+      };
+
+
+      image.src = source;
+
+    }
+  );
+
+}
 
 /* =========================================================
    NOME SEGURO PARA O ARQUIVO
@@ -412,10 +702,20 @@ async function handlePostSubmit(event) {
       .getElementById("postType")
       .value;
 
+  const notifySubscribers =
+    document
+      .getElementById("notifySubscribers")
+      ?.checked || false;
+
+    console.log(
+      "Notificar assinantes:",
+      notifySubscribers
+    );
 
   const banner =
     bannerInput.files[0];
 
+  let preparedBanner = null;
 
   /* -------------------------------------------------------
      VALIDAÇÕES
@@ -512,7 +812,7 @@ async function handlePostSubmit(event) {
 
 
   let uploadedFilePath = null;
-
+  let postCreated = false;
 
   try {
 
@@ -520,8 +820,23 @@ async function handlePostSubmit(event) {
        1. UPLOAD DO BANNER
        ----------------------------------------------------- */
 
+    /* -----------------------------------------------------
+      1. PREPARAR O BANNER
+      ----------------------------------------------------- */
+
+    const prepared =
+      await prepareBanner(banner);
+
+    preparedBanner =
+      prepared.file;
+
+
+    /* -----------------------------------------------------
+      2. CRIAR NOME SEGURO
+      ----------------------------------------------------- */
+
     const fileName =
-      createSafeFileName(banner);
+      createSafeFileName(preparedBanner);
 
 
     uploadedFilePath =
@@ -535,10 +850,10 @@ async function handlePostSubmit(event) {
       .from(POSTS_BUCKET)
       .upload(
         uploadedFilePath,
-        banner,
+        preparedBanner,
         {
           cacheControl: "3600",
-          contentType: banner.type,
+          contentType: preparedBanner.type,
           upsert: false
         }
       );
@@ -548,12 +863,19 @@ async function handlePostSubmit(event) {
 
       console.error(
         "Erro ao enviar banner:",
-        uploadError
+        {
+          message: uploadError.message,
+          name: uploadError.name,
+          statusCode: uploadError.statusCode,
+          error: uploadError
+        }
       );
 
+
       throw new Error(
-        "Não foi possível enviar o banner."
+        "Não foi possível enviar o banner. Verifique o formato e o tamanho da imagem e tente novamente."
       );
+
     }
 
 
@@ -612,10 +934,13 @@ async function handlePostSubmit(event) {
 
 
     const {
+      data: createdPost,
       error: insertError
     } = await supabaseClient
       .from("posts")
-      .insert(postData);
+      .insert(postData)
+      .select("id")
+      .single();
 
 
     if (insertError) {
@@ -630,10 +955,72 @@ async function handlePostSubmit(event) {
       );
     }
 
+    postCreated = true;
+
+    /* -----------------------------------------------------
+      4. ENVIAR NEWSLETTER
+      ----------------------------------------------------- */
+
+    if (notifySubscribers) {
+
+      console.log(
+        "Enviando Post para a newsletter:",
+        createdPost.id
+      );
+
+      const {
+        data: newsletterData,
+        error: newsletterError
+      } = await supabaseClient.functions.invoke(
+        "send-post-newsletter",
+        {
+          body: {
+            post_id: createdPost.id
+          }
+        }
+      );
+
+
+      if (newsletterError) {
+
+        console.error(
+          "Erro ao enviar newsletter:",
+          newsletterError
+        );
+
+        console.error(
+          "Detalhes do disparo:",
+          newsletterData
+        );
+
+        throw new Error(
+          "O Post foi criado, mas não foi possível enviar a newsletter."
+        );
+
+      }
+
+
+      console.log(
+        "Newsletter enviada com sucesso:",
+        newsletterData
+      );
+
+    }
+
 
     /* -----------------------------------------------------
        4. SUCESSO
        ----------------------------------------------------- */
+
+      console.log(
+        "Post criado com sucesso:",
+        createdPost
+      );
+
+      console.log(
+        "ID do Post:",
+        createdPost?.id
+      );
 
     alert(
       "Publicação criada com sucesso! ❤️"
@@ -642,6 +1029,8 @@ async function handlePostSubmit(event) {
 
     postForm.reset();
 
+    updateTextCounter();
+    resetBannerDisplay();
 
     /* -----------------------------------------------------
        5. ATUALIZAR CONTADOR DO TEXTO
@@ -663,7 +1052,7 @@ async function handlePostSubmit(event) {
        removemos o banner para evitar arquivo órfão.
     */
 
-    if (uploadedFilePath) {
+  if (uploadedFilePath && !postCreated) {
 
       const {
         error: removeError
@@ -700,6 +1089,32 @@ async function handlePostSubmit(event) {
     submitButton.textContent =
       "Publicar acompanhamento ❤";
   }
+}
+
+
+
+function resetBannerDisplay() {
+
+  const uploadPlaceholder =
+    document.querySelector(".upload-placeholder");
+
+  if (!uploadPlaceholder) {
+    return;
+  }
+
+  uploadPlaceholder.innerHTML = `
+    <span class="upload-icon" aria-hidden="true">
+      +
+    </span>
+
+    <strong>
+      Adicionar banner
+    </strong>
+
+    <small>
+      JPG, PNG, WEBP ou GIF · recomendado 600 × 800 px
+    </small>
+  `;
 }
 
 
@@ -826,21 +1241,6 @@ document.addEventListener(
   "input",
   (event) => {
 
-    document.addEventListener(
-      "change",
-      (event) => {
-
-        if (
-          event.target.id === "postBanner"
-        ) {
-
-          updateBannerDisplay();
-
-        }
-
-      }
-    );
-
     if (
       event.target.id === "postText"
     ) {
@@ -852,6 +1252,21 @@ document.addEventListener(
   }
 );
 
+
+document.addEventListener(
+  "change",
+  (event) => {
+
+    if (
+      event.target.id === "postBanner"
+    ) {
+
+      updateBannerDisplay();
+
+    }
+
+  }
+);
 
 /* =========================================================
    START
@@ -884,69 +1299,56 @@ function updateBannerDisplay() {
     bannerInput.files[0];
 
 
-  if (!file) {
-
-    uploadPlaceholder.innerHTML = `
-      <span class="upload-icon" aria-hidden="true">
-        +
-      </span>
-
-      <strong>
-        Adicionar banner
-      </strong>
-
-      <small>
-        JPG, PNG, WEBP ou GIF · recomendado 600 × 800 px
-      </small>
-    `;
-
-    return;
-  }
+const validation =
+  validateBanner(file);
 
 
-  const validation =
-    validateBanner(file);
-
-
-  if (!validation.valid) {
-
-    uploadPlaceholder.innerHTML = `
-      <span class="upload-icon upload-error-icon" aria-hidden="true">
-        !
-      </span>
-
-      <strong class="upload-error-text">
-        Arquivo não permitido
-      </strong>
-
-      <small>
-        ${validation.message}
-      </small>
-    `;
-
-    return;
-  }
-
-
-  const sizeInKB =
-    Math.round(file.size / 1024);
-
+if (!validation.valid) {
 
   uploadPlaceholder.innerHTML = `
-    <span class="upload-icon upload-success-icon" aria-hidden="true">
-      ✓
+    <span class="upload-icon upload-error-icon" aria-hidden="true">
+      !
     </span>
 
-    <strong>
-      ${file.name}
+    <strong class="upload-error-text">
+      ${validation.heic ? "Formato HEIC/HEIF" : "Arquivo não permitido"}
     </strong>
 
     <small>
-      ${sizeInKB} KB · ${file.type.split("/")[1].toUpperCase()}
-    </small>
-
-    <small class="upload-change">
-      Clique para substituir
+      ${validation.message}
     </small>
   `;
+
+  return;
+}
+
+
+const sizeInKB =
+  Math.round(file.size / 1024);
+
+
+const fileType =
+  file.type
+    ? file.type.split("/")[1]?.toUpperCase()
+    : getFileExtension(file).toUpperCase();
+
+
+uploadPlaceholder.innerHTML = `
+  <span class="upload-icon upload-success-icon" aria-hidden="true">
+    ✓
+  </span>
+
+  <strong>
+    ${file.name}
+  </strong>
+
+  <small>
+    ${sizeInKB} KB · ${fileType}
+  </small>
+
+  <small class="upload-change">
+    Clique para substituir
+  </small>
+`;
+
 }

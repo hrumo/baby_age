@@ -4,8 +4,16 @@ const SUPABASE_KEY = "sb_publishable_VqccUBZAGdVco1H8ouB-Fg_YypNRDSS";
 
 const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
-  SUPABASE_KEY
+  SUPABASE_KEY,
+  {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false
+    }
+  }
 );
+
 const GESTATIONAL_REFERENCE_DATE = "2026-08-07";
 const GESTATIONAL_REFERENCE_WEEKS = 5;
 const GESTATIONAL_REFERENCE_DAYS = 5;
@@ -958,3 +966,110 @@ renderComments();
 startRealtime();
 
 setInterval(updateAge, 1000);
+
+const newsletterForm =
+  document.getElementById("newsletterForm");
+
+const newsletterName =
+  document.getElementById("newsletterName");
+
+const newsletterEmail =
+  document.getElementById("newsletterEmail");
+
+const newsletterNote =
+  document.getElementById("newsletterNote");
+
+  async function subscribeToNewsletter(event) {
+
+  event.preventDefault();
+
+
+  const name =
+    newsletterName.value.trim();
+
+  const email =
+    newsletterEmail.value.trim().toLowerCase();
+
+
+  if (!name || !email) {
+
+    newsletterNote.textContent =
+      "Preencha seu nome e seu melhor e-mail.";
+
+    return;
+
+  }
+
+
+  newsletterNote.textContent =
+    "Salvando sua inscrição...";
+
+
+  const submitButton =
+    newsletterForm.querySelector(
+      ".newsletter-submit"
+    );
+
+
+  submitButton.disabled = true;
+
+
+ const {
+    data: subscriberId,
+    error: subscriberError
+  } = await supabaseClient
+    .rpc("subscribe_to_newsletter", {
+      p_name: name,
+      p_email: email
+    });
+
+  if (subscriberError) {
+
+    console.error(
+      "Erro ao cadastrar newsletter:",
+      {
+        message: subscriberError.message,
+        details: subscriberError.details,
+        hint: subscriberError.hint,
+        code: subscriberError.code
+      }
+    );
+
+    if (subscriberError.code === "23505") {
+
+      newsletterNote.textContent =
+        "Este e-mail já está recebendo nossas novidades. ♥";
+
+    } else {
+
+      newsletterNote.textContent =
+        "Não foi possível realizar sua inscrição. Tente novamente.";
+
+    }
+
+    submitButton.disabled = false;
+
+    return;
+  }
+
+await newsletter.syncSubscriber(subscriberId);
+
+  newsletterForm.reset();
+
+
+  newsletterNote.textContent =
+    "Pronto! Você receberá os próximos capítulos ♥";
+
+
+  submitButton.disabled = false;
+
+}
+
+if (newsletterForm) {
+
+  newsletterForm.addEventListener(
+    "submit",
+    subscribeToNewsletter
+  );
+
+}
