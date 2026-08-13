@@ -1,0 +1,174 @@
+/* Tablet / desktop */
+@media (min-width: 700px) {
+
+    .hero {
+        padding: 64px 32px 44px;
+        text-align: center;
+    }
+
+    .hero h1 {
+        font-size: 3rem;
+    }
+
+    .age-card {
+      width: min(100% - 40px, 1080px);
+        margin: 0 auto;
+        padding: 38px;
+    }
+
+    .age-main > span:not(.age-and) {
+        font-size: 4.5rem;
+    }
+
+    .birth-editor {
+        max-width: 760px;
+        margin: 22px auto 0;
+    }
+
+    .updates-slider {
+        gap: 18px;
+    }
+
+    .update-card {
+        flex: 0 0 calc((100% - 18px) / 2);
+    }
+}
+
+@media (min-width: 900px) {
+
+    .updates-slider {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+
+        gap: 18px;
+
+        overflow: visible;
+
+        padding: 0 2px 8px;
+    }
+
+    .update-card {
+        width: 100%;
+        flex: none;
+    }
+
+    .timeline {
+        grid-template-columns: repeat(4, 1fr);
+        padding: 0;
+        gap: 8px;
+    }
+
+    .timeline::before {
+        display: none;
+    }
+
+    .milestone {
+        display: block;
+        min-height: 100px;
+        position: relative;
+    }
+
+    .milestone::after {
+        content: "";
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        right: -8px;
+        height: 1px;
+        background: var(--line);
+        z-index: 0;
+    }
+
+    /* Último item de cada linha não desenha linha */
+    .milestone:nth-child(4n)::after,
+    .milestone:last-child::after {
+        display: none;
+    }
+
+    .milestone-dot {
+        position: relative;
+        z-index: 1;
+        margin-bottom: 13px;
+    }
+
+    .comment-form {
+        padding: 28px;
+    }
+}
+
+@media (min-width: 1000px) {
+  .hero { padding-top: 76px; }
+  .section { padding-top: 64px; }
+  .guestbook { padding-bottom: 76px; }
+  .comment-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+  }
+  .comment-form .field { margin: 0; }
+  .comment-form .field:nth-child(3),
+  .comment-form .primary-button,
+  .comment-form .form-note { grid-column: 1 / -1; }
+  .updates {
+  padding-top: 64px;
+}
+}
+
+@media (min-width: 700px) {
+
+  .family-photo {
+    padding-top: 42px;
+  }
+
+  .family-photo-card {
+    display: grid;
+    grid-template-columns: 1.1fr .9fr;
+    min-height: 430px;
+  }
+
+  .family-photo-image {
+    height: 100%;
+    aspect-ratio: auto;
+  }
+
+  .family-photo-caption {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 45px;
+  }
+
+  .family-photo-caption h2 {
+    font-size: 2.25rem;
+  }
+
+  .family-photo-caption p {
+    font-size: .95rem;
+  }
+}
+
+@media (max-width: 699px) {
+
+  .updates-arrow {
+    display: none;
+  }
+
+}
+
+/* =========================================================
+   DESKTOP
+   ========================================================= */
+
+@media (min-width: 700px) {
+
+  .admin-access {
+    width: 46px;
+    height: 46px;
+  }
+
+  .admin-access-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+}

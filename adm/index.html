@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Hub de Gestação">
+  <meta property="og:image" content="https://brib.baby/images/seo.jpg">
+  <title>Admin — Hub de Gestação</title>
+  <link rel="stylesheet" href="adm.css">
+  <link rel="icon" type="image/webp" href="images/icon.webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+ <main class="admin-page">
+
+    <header class="admin-header">
+      <a href="/" class="back-link">
+        <span aria-hidden="true">←</span>
+        Voltar ao Hub
+      </a>
+
+    </header>
+
+
+    <section class="admin-content">
+
+      <div class="admin-section-heading">
+
+        <div>
+          <span class="section-kicker">ACOMPANHAMENTO</span>
+          <h2>Nova publicação</h2>
+        </div>
+
+        <span class="admin-status">
+          Área privada
+        </span>
+
+      </div>
+
+
+      <form class="post-form">
+
+        <!-- Título -->
+
+        <div class="form-field">
+
+          <label for="postTitle">
+            Título
+          </label>
+
+          <input
+            type="text"
+            id="postTitle"
+            name="title"
+            placeholder="Ex.: Nosso primeiro ultrassom"
+            maxlength="120"
+            required
+          >
+
+        </div>
+
+
+        <!-- Banner -->
+
+        <div class="form-field">
+
+          <label for="postBanner">
+            Banner da publicação
+          </label>
+
+          <div class="upload-area">
+
+            <input
+              type="file"
+              id="postBanner"
+              name="banner"
+              accept=".jpg,.jpeg,.png,.webp,.gif,image/jpeg,image/png,image/webp,image/gif"
+              required
+            >
+
+            <div class="upload-placeholder">
+
+              <span class="upload-icon" aria-hidden="true">
+                +
+              </span>
+
+              <strong>
+                Adicionar banner
+              </strong>
+
+              <small>
+                JPG, PNG, WEBP ou GIF · recomendado 600 × 800 px
+              </small>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- Texto -->
+
+        <div class="form-field">
+
+          <label for="postText">
+            Texto
+          </label>
+
+          <textarea
+            id="postText"
+            name="text"
+            rows="7"
+            maxlength="1000"
+            placeholder="Conte um pouco sobre esse momento..."
+            required
+          ></textarea>
+
+          <div class="field-note">
+            <span>
+              Uma pequena história para guardar esse momento.
+            </span>
+
+            <span>
+              0 / 1000
+            </span>
+          </div>
+
+        </div>
+
+
+        <!-- Conteúdo externo -->
+
+        <div class="form-field">
+
+          <label for="postUrl">
+            Conteúdo externo
+            <span>Opcional</span>
+          </label>
+
+          <input
+            type="url"
+            id="postUrl"
+            name="media_url"
+            placeholder="https://drive.google.com/..."
+          >
+
+          <small class="field-help">
+            Link para vídeo, PDF, imagem ou outro conteúdo armazenado externamente.
+          </small>
+
+        </div>
+
+
+        <!-- Tipo -->
+
+        <div class="form-row">
+
+          <div class="form-field">
+
+            <label for="postType">
+              Tipo de conteúdo
+              <span>Opcional</span>
+            </label>
+
+            <select id="postType" name="media_type">
+
+              <option value="">
+                Nenhum
+              </option>
+
+              <option value="image">
+                Imagem
+              </option>
+
+              <option value="video">
+                Vídeo
+              </option>
+
+              <option value="pdf">
+                PDF
+              </option>
+
+              <option value="link">
+                Outro Link
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+
+        <!-- Ações -->
+
+        <div class="form-actions">
+
+          <a href="/" class="secondary-button">
+            Cancelar
+          </a>
+
+          <button
+            type="submit"
+            class="primary-button"
+          >
+            Publicar acompanhamento ❤
+          </button>
+
+        </div>
+
+      </form>
+
+    </section>
+
+
+    <footer class="admin-footer">
+     Área administrativa ● Hub de Gestação
+    </footer>
+
+  </main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="adm.js"></script>
+</body>
+</html>
