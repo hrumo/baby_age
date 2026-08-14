@@ -358,12 +358,32 @@ button {
   line-height: 1.35;
 }
 
+.quote-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  margin-top: 25px;
+}
+
+.phrase-like-button {
+  color: var(--cream-2) !important;
+}
+
+.phrase-like-button.liked {
+  border-color: rgba(255, 250, 244, .35) !important;
+  background: rgba(255, 250, 244, .12) !important;
+  color: var(--cream-2) !important;
+}
+
 .quote-sign {
   display: block;
-  margin-top: 17px;
+
   opacity: .8;
   font-size: .75rem;
   text-align: right;
+  margin-right: 35px;
 }
 
 .timeline {
@@ -870,6 +890,15 @@ button {
   color: var(--muted);
   font-size: .82rem;
   line-height: 1.55;
+}
+
+.update-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  margin-top: 15px;
 }
 
 .update-link {

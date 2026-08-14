@@ -17,7 +17,10 @@ const supabaseClient = window.supabase.createClient(
 const GESTATIONAL_REFERENCE_DATE = "2026-08-07";
 const GESTATIONAL_REFERENCE_WEEKS = 5;
 const GESTATIONAL_REFERENCE_DAYS = 5;
+
 const LIKED_COMMENTS_KEY = "babyAgeLikedComments";
+const LIKED_POSTS_KEY = "babyAgeLikedPosts";
+const LIKED_PHRASES_KEY = "babyAgeLikedPhrases";
 
 const phrases = [
   "Toda grande história começa antes mesmo de sabermos que ela está acontecendo. E, de algum jeito, a nossa já começou.",
@@ -100,6 +103,23 @@ const phrases = [
 
   "Quarenta semanas de espera, crescimento, descobertas, consultas, sonhos e amor. Uma história inteira chegou até aqui — e agora começa o capítulo que mais esperamos: finalmente conhecer você."
 ];
+
+async function getCurrentPhrase() {
+  const age = calculateGestationalAge(new Date());
+
+  const { data, error } = await supabaseClient
+    .from("phrases")
+    .select("id, week, phrase, likes")
+    .eq("week", age.weeks)
+    .single();
+
+  if (error) {
+    console.error("Erro ao carregar phrase:", error);
+    return null;
+  }
+
+  return data;
+}
 
 const $ = (id) => document.getElementById(id);
 
@@ -196,11 +216,120 @@ function updateAge() {
     `${minutes.toLocaleString("pt-BR")} minutos · ` +
     `${seconds.toString().padStart(2, "0")} segundos`;
 
-  const phraseIndex =
-    Math.floor(age.totalDays / 7) % phrases.length;
-
-  $("dailyPhrase").textContent = phrases[phraseIndex];
   updateMilestones(now);
+}
+
+let currentPhrase = null;
+
+async function loadCurrentPhrase() {
+  const age =
+    calculateGestationalAge(new Date());
+
+  const {
+    data,
+    error
+  } = await supabaseClient
+    .from("phrases")
+    .select(
+      "id, week, phrase, likes"
+    )
+    .eq(
+      "week",
+      age.weeks
+    )
+    .maybeSingle();
+
+  if (error) {
+
+    console.error(
+      "Erro ao carregar Phrase:",
+      error
+    );
+
+    return;
+
+  }
+
+  if (!data) {
+
+    console.error(
+      "Nenhuma Phrase encontrada."
+    );
+
+    return;
+
+  }
+
+  // ---------------------------------------------
+  // Texto
+  // ---------------------------------------------
+
+  $("dailyPhrase").textContent =
+    data.phrase;
+
+
+  // ---------------------------------------------
+  // Semana
+  // ---------------------------------------------
+
+  $("phraseWeek").textContent =
+    `${data.week}ª semana`;
+
+
+  // ---------------------------------------------
+  // Botão
+  // ---------------------------------------------
+
+  const button =
+    document.getElementById(
+      "phraseLikeButton"
+    );
+
+  const count =
+    document.getElementById(
+      "phraseLikeCount"
+    );
+
+
+  if (!button) {
+
+    console.error(
+      "phraseLikeButton não encontrado."
+    );
+
+    return;
+
+  }
+
+
+  // ID da Phrase
+  button.dataset.id =
+    data.id;
+
+
+  // Contador
+  if (count) {
+
+    count.textContent =
+      data.likes || 0;
+
+  }
+
+
+  // Estado de Like
+  const alreadyLiked =
+    hasLikedPhrase(data.id);
+
+
+  button.classList.toggle(
+    "liked",
+    alreadyLiked
+  );
+
+
+  button.disabled =
+    alreadyLiked;
+
 }
 
 function getGestationalDate(targetWeeks, targetDays = 0) {
@@ -368,6 +497,7 @@ async function getUpdates() {
     .from("posts")
     .select(`
       id,
+      likes,
       title,
       text,
       banner_url,
@@ -522,32 +652,92 @@ async function renderUpdates() {
        LINK EXTERNO — OPCIONAL
        ----------------------------------------------------- */
 
-    if (update.media_url) {
+      /* -----------------------------------------------------
+      RODAPÉ DO POST
+      ----------------------------------------------------- */
 
-      const link =
-        document.createElement("a");
+      const footer =
+        document.createElement("div");
 
-      link.className =
-        "update-link";
+      footer.className =
+        "update-footer";
 
-      link.href =
-        update.media_url;
 
-      link.target =
-        "_blank";
+      /* -----------------------------------------------------
+        LIKE
+        ----------------------------------------------------- */
 
-      link.rel =
-        "noopener noreferrer";
+      const like =
+        document.createElement("button");
 
-      link.innerHTML = `
-        Ver conteúdo
-        <span aria-hidden="true">→</span>
+      like.type =
+        "button";
+     
+        const alreadyLiked =
+        hasLikedPost(update.id);
+
+      like.className =
+        `like-button post-like-button ${
+          alreadyLiked ? "liked" : ""
+        }`;
+
+      like.dataset.id =
+        update.id;
+
+      like.setAttribute(
+        "aria-label",
+        alreadyLiked
+          ? "Você já curtiu esta publicação"
+          : "Curtir publicação"
+      );
+
+      like.disabled =
+        alreadyLiked;
+
+      like.innerHTML = `
+        <span class="like-icon">♥</span>
+        <span class="like-count">${update.likes || 0}</span>
       `;
 
-      content.appendChild(link);
-    }
+
+      /* -----------------------------------------------------
+        LINK EXTERNO — OPCIONAL
+        ----------------------------------------------------- */
+
+      if (update.media_url) {
+
+        const link =
+          document.createElement("a");
+
+        link.className =
+          "update-link";
+
+        link.href =
+          update.media_url;
+
+        link.target =
+          "_blank";
+
+        link.rel =
+          "noopener noreferrer";
+
+        link.innerHTML = `
+          Ver conteúdo
+          <span aria-hidden="true">→</span>
+        `;
+
+        footer.appendChild(link);
+      }
 
 
+      /* -----------------------------------------------------
+        ADICIONAR LIKE + LINK
+        ----------------------------------------------------- */
+
+      footer.prepend(like);
+
+      content.appendChild(footer);
+    
     /* -----------------------------------------------------
        CARD
        ----------------------------------------------------- */
@@ -591,6 +781,93 @@ function markCommentAsLiked(id) {
       JSON.stringify(likedComments)
     );
   }
+}
+
+function getLikedPosts() {
+
+  try {
+
+    return JSON.parse(
+      localStorage.getItem(
+        LIKED_POSTS_KEY
+      ) || "[]"
+    );
+
+  } catch {
+
+    return [];
+
+  }
+
+}
+
+
+function hasLikedPost(id) {
+
+  return getLikedPosts().includes(id);
+
+}
+
+
+function markPostAsLiked(id) {
+
+  const likedPosts =
+    getLikedPosts();
+
+  if (!likedPosts.includes(id)) {
+
+    likedPosts.push(id);
+
+    localStorage.setItem(
+      LIKED_POSTS_KEY,
+      JSON.stringify(likedPosts)
+    );
+
+  }
+
+}
+
+function getLikedPhrases() {
+  try {
+
+    return JSON.parse(
+      localStorage.getItem(
+        LIKED_PHRASES_KEY
+      ) || "[]"
+    );
+
+  } catch {
+
+    return [];
+
+  }
+
+}
+
+
+function hasLikedPhrase(id) {
+
+  return getLikedPhrases().includes(id);
+
+}
+
+
+function markPhraseAsLiked(id) {
+
+  const likedPhrases =
+    getLikedPhrases();
+
+  if (!likedPhrases.includes(id)) {
+
+    likedPhrases.push(id);
+
+    localStorage.setItem(
+      LIKED_PHRASES_KEY,
+      JSON.stringify(likedPhrases)
+    );
+
+  }
+
 }
 
 async function getComments() {
@@ -659,23 +936,36 @@ async function renderComments() {
     text.className = "comment-text";
     text.textContent = comment.text;
 
-    const like = document.createElement("button");
-    like.type = "button";
-    const alreadyLiked = hasLikedComment(comment.id);
+    const like =
+      document.createElement("button");
+
+    like.type =
+      "button";
+
+    const alreadyLiked =
+      hasLikedComment(comment.id);
+
     like.className =
-      `like-button ${alreadyLiked ? "liked" : ""}`;
-    if (alreadyLiked) {
-      like.disabled = true;
-      like.setAttribute(
-        "aria-label",
-        "Você já curtiu esta mensagem"
-      );
-    }
-    like.dataset.id = comment.id;
-    like.setAttribute("aria-label", "Curtir mensagem");
+      `like-button comment-like-button ${
+        alreadyLiked ? "liked" : ""
+      }`;
+
+    like.dataset.id =
+      comment.id;
+
+    like.setAttribute(
+      "aria-label",
+      alreadyLiked
+        ? "Você já curtiu esta mensagem"
+        : "Curtir mensagem"
+    );
+
+    like.disabled =
+      alreadyLiked;
 
     like.innerHTML = `
-      ♥ <span>${comment.likes || 0}</span>
+      <span class="like-icon">♥</span>
+      <span class="like-count">${comment.likes || 0}</span>
     `;
 
     article.append(top, text, like);
@@ -732,30 +1022,35 @@ async function handleCommentSubmit(event) {
   await renderComments();
 }
 
-async function handleLike(event) {
-
-  const button = event.target.closest(".like-button");
+async function handlePhraseLike(event) {
+  const button = event.currentTarget;
 
   if (!button) return;
 
-  const id = button.dataset.id;
+  const id = Number(button.dataset.id);
 
-  // Impede curtida duplicada neste dispositivo
-  if (hasLikedComment(id)) {
+  if (!id) {
+    console.error("Phrase sem ID para curtir.");
+    return;
+  }
+
+  // Já curtiu esta Phrase neste navegador
+  if (hasLikedPhrase(id)) {
     return;
   }
 
   button.disabled = true;
 
-  const { data, error } = await supabaseClient
-    .rpc("increment_comment_like", {
-      comment_id: id
-    });
+  const { error } = await supabaseClient.rpc(
+    "increment_phrase_like",
+    {
+      phrase_id: id
+    }
+  );
 
   if (error) {
-
     console.error(
-      "Erro ao registrar curtida:",
+      "Erro ao curtir Phrase:",
       error
     );
 
@@ -764,15 +1059,295 @@ async function handleLike(event) {
     return;
   }
 
-  // Marca este comentário como curtido
-  // somente neste dispositivo
-  markCommentAsLiked(id);
+  // Registra localmente que este navegador já curtiu
+  markPhraseAsLiked(id);
 
-  await renderComments();
+  // Atualiza visualmente o estado do botão
+  button.classList.add("liked");
+
+  // Mantém o botão bloqueado após o like
+  button.disabled = true;
+
+const count =
+  document.getElementById(
+    "phraseLikeCount"
+  );
+
+if (count) {
+  const currentLikes =
+    parseInt(
+      count.textContent || "0",
+      10
+    );
+
+  count.textContent =
+    currentLikes + 1;
 }
 
-$("commentForm").addEventListener("submit", handleCommentSubmit);
-$("commentsList").addEventListener("click", handleLike);
+}
+
+async function handlePostLike(event) {
+
+  const button =
+    event.target.closest(".post-like-button");
+
+  if (!button) {
+    return;
+  }
+
+
+  const id =
+    Number(button.dataset.id);
+
+
+  if (!id) {
+
+    console.error(
+      "Post sem ID para curtir."
+    );
+
+    return;
+
+  }
+
+
+  // ---------------------------------------------
+  // Já curtiu este Post neste navegador
+  // ---------------------------------------------
+
+  if (hasLikedPost(id)) {
+    return;
+  }
+
+
+  // ---------------------------------------------
+  // Bloqueia durante a requisição
+  // ---------------------------------------------
+
+  button.disabled = true;
+
+
+  // ---------------------------------------------
+  // Incrementa no Supabase
+  // ---------------------------------------------
+
+  const { error } =
+    await supabaseClient.rpc(
+      "increment_post_like",
+      {
+        post_id: id
+      }
+    );
+
+
+  // ---------------------------------------------
+  // Erro
+  // ---------------------------------------------
+
+  if (error) {
+
+    console.error(
+      "Erro ao curtir Post:",
+      error
+    );
+
+    button.disabled = false;
+
+    return;
+  }
+
+
+  // ---------------------------------------------
+  // Salva Like localmente
+  // ---------------------------------------------
+
+  markPostAsLiked(id);
+
+
+  // ---------------------------------------------
+  // Estado visual
+  // ---------------------------------------------
+
+  button.classList.add("liked");
+
+
+  // ---------------------------------------------
+  // Atualiza contador
+  // ---------------------------------------------
+
+  const count =
+    button.querySelector(".like-count");
+
+
+  if (count) {
+
+    const currentLikes =
+      parseInt(
+        count.textContent || "0",
+        10
+      );
+
+
+    count.textContent =
+      currentLikes + 1;
+
+  }
+
+
+  // ---------------------------------------------
+  // Mantém bloqueado
+  // ---------------------------------------------
+
+  button.disabled = true;
+
+}
+
+$("updatesList").addEventListener(
+  "click",
+  handlePostLike
+);
+
+$("commentsList").addEventListener(
+  "click",
+  handleCommentLike
+);
+
+$("commentForm").addEventListener(
+  "submit",
+  handleCommentSubmit
+);
+
+const phraseLikeButton =
+  document.getElementById("phraseLikeButton");
+
+if (phraseLikeButton) {
+  phraseLikeButton.addEventListener(
+    "click",
+    handlePhraseLike
+  );
+}
+
+
+async function handleCommentLike(event) {
+
+  const button =
+    event.target.closest(
+      ".comment-like-button"
+    );
+
+  if (!button) {
+    return;
+  }
+
+
+  const id =
+    button.dataset.id;
+
+
+  if (!id) {
+
+    console.error(
+      "Comentário sem ID para curtir."
+    );
+
+    return;
+  }
+
+
+  // ---------------------------------------------
+  // Já curtiu este comentário neste navegador
+  // ---------------------------------------------
+
+  if (hasLikedComment(id)) {
+    return;
+  }
+
+
+  // ---------------------------------------------
+  // Bloqueia durante a requisição
+  // ---------------------------------------------
+
+  button.disabled = true;
+
+
+  // ---------------------------------------------
+  // Incrementa no Supabase
+  // ---------------------------------------------
+
+  const { error } =
+    await supabaseClient.rpc(
+      "increment_comment_like",
+      {
+        comment_id: id
+      }
+    );
+
+
+  // ---------------------------------------------
+  // Erro
+  // ---------------------------------------------
+
+  if (error) {
+
+    console.error(
+      "Erro ao curtir comentário:",
+      error
+    );
+
+    button.disabled = false;
+
+    return;
+  }
+
+
+  // ---------------------------------------------
+  // Salva Like localmente
+  // ---------------------------------------------
+
+  markCommentAsLiked(id);
+
+
+  // ---------------------------------------------
+  // Estado visual
+  // ---------------------------------------------
+
+  button.classList.add(
+    "liked"
+  );
+
+
+  // ---------------------------------------------
+  // Atualiza contador
+  // ---------------------------------------------
+
+  const count =
+    button.querySelector(
+      ".like-count"
+    );
+
+
+  if (count) {
+
+    const currentLikes =
+      parseInt(
+        count.textContent || "0",
+        10
+      );
+
+
+    count.textContent =
+      currentLikes + 1;
+  }
+
+
+  // ---------------------------------------------
+  // Mantém bloqueado
+  // ---------------------------------------------
+
+  button.disabled = true;
+
+}
+
 $("commentText").addEventListener("input", () => {
   $("charCount").textContent = $("commentText").value.length;
 });
@@ -956,6 +1531,8 @@ function setupUpdatesNavigation() {
 }
 
 updateAge();
+
+loadCurrentPhrase();
 
 renderUpdates();
 
