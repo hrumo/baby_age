@@ -69,6 +69,10 @@ button { cursor: pointer; }
   letter-spacing: .18em;
 }
 
+.eyebrow{
+  margin-top: 55px;
+}
+
 .hero h1 {
   margin: 6px 0 2px;
   font-family: "Playfair Display", Georgia, serif;
