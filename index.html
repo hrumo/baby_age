@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Hub de Gestação">
   <meta property="og:image" content="https://brib.baby/images/seo.jpg">
-  <title>Hub de Gestação</title>
+  <title>Gestação Hub</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="responsive.css">
   <link rel="icon" type="image/webp" href="images/icon.webp">
@@ -17,7 +17,111 @@
 <body>
   <main class="app">
     <section class="hero" aria-labelledby="page-title">
-      <div class="eyebrow">HUB DE GESTAÇÃO</div>
+      <a
+        href="#newsletter"
+        class="newsletter-access"
+        id="newsletterAccess"
+        aria-label="Ir para Newsletter"
+      >
+        <img
+          src="images/send-dark.webp"
+          alt=""
+          aria-hidden="true"
+        >
+        <span>NEWSLETTER</span>
+      </a>
+      <div class="hub-menu" id="hubMenu">
+          <button
+            type="button"
+            class="hub-menu-toggle"
+            id="hubMenuToggle"
+            aria-label="Abrir menu do Hub"
+            aria-expanded="false"
+            aria-controls="hubMenuPanel"
+          >
+            <span class="hub-menu-toggle-icon">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+          </button>
+
+
+          <div
+            class="hub-menu-panel"
+            id="hubMenuPanel"
+            aria-hidden="true"
+          >
+
+            <button
+              type="button"
+              class="hub-menu-item"
+              data-scroll-target="updates"
+            >
+              <span class="hub-menu-item-icon">
+                <img
+                  src="images/news.webp"
+                  alt=""
+                  aria-hidden="true"
+                >
+              </span>
+
+              <span class="hub-menu-item-text">
+                <strong>Novidades</strong>
+                <small>Acompanhe a história</small>
+              </span>
+
+              <span class="hub-menu-item-arrow">→</span>
+            </button>
+
+
+            <button
+              type="button"
+              class="hub-menu-item"
+              data-scroll-target="milestones"
+            >
+              <span class="hub-menu-item-icon">
+                <img
+                  src="images/pin.webp"
+                  alt=""
+                  aria-hidden="true"
+                >
+              </span>
+
+              <span class="hub-menu-item-text">
+                <strong>Capítulos</strong>
+                <small>Veja o que vem por aí</small>
+              </span>
+
+              <span class="hub-menu-item-arrow">→</span>
+            </button>
+
+
+            <button
+              type="button"
+              class="hub-menu-item"
+              data-scroll-target="guestbook"
+            >
+              <span class="hub-menu-item-icon">
+                <img
+                  src="images/message.webp"
+                  alt=""
+                  aria-hidden="true"
+                >
+              </span>
+
+              <span class="hub-menu-item-text">
+                <strong>Deixe um carinho</strong>
+                <small>Escreva para o bebê</small>
+              </span>
+
+              <span class="hub-menu-item-arrow">→</span>
+            </button>
+
+          </div>
+
+        </div>
+      <div class="eyebrow">GESTAÇÃO HUB</div>
       <h1 id="page-title">PRÉ-NATAL</h1>
       <p class="hero-subtitle">Pequenos momentos, grandes descobertas.</p>
 
@@ -95,7 +199,7 @@
         </div>
           </div>
         </section>
-      <section class="updates section">
+  <section class="updates section" id="updates">
 
       <div class="section-heading">
 
@@ -243,7 +347,7 @@
 
     </section>
 
-    <section class="milestones section">
+  <section class="milestones section" id="milestones">
       <div class="section-heading">
         <span class="section-kicker">LINHA DO TEMPO</span>
         <h2>Próximos marcos</h2>

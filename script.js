@@ -1530,6 +1530,232 @@ function setupUpdatesNavigation() {
 
 }
 
+
+/* =========================================================
+   MENU DO HUB
+   ========================================================= */
+
+function setupHubMenu() {
+
+  const menu = document.getElementById("hubMenu");
+  const toggle = document.getElementById("hubMenuToggle");
+  const panel = document.getElementById("hubMenuPanel");
+
+  if (!menu || !toggle || !panel) {
+    return;
+  }
+
+  const items =
+    menu.querySelectorAll(".hub-menu-item");
+
+
+  /* -------------------------------------------------------
+     ABRIR / FECHAR
+     ------------------------------------------------------- */
+
+  function setMenuState(isOpen) {
+
+    menu.classList.toggle(
+      "is-open",
+      isOpen
+    );
+
+    toggle.setAttribute(
+      "aria-expanded",
+      String(isOpen)
+    );
+
+    toggle.setAttribute(
+      "aria-label",
+      isOpen
+        ? "Fechar menu do Hub"
+        : "Abrir menu do Hub"
+    );
+
+    panel.setAttribute(
+      "aria-hidden",
+      String(!isOpen)
+    );
+  }
+
+
+  /* -------------------------------------------------------
+     BOTÃO
+     ------------------------------------------------------- */
+
+  toggle.addEventListener(
+    "click",
+    function(event) {
+
+      event.stopPropagation();
+
+      const isOpen =
+        menu.classList.contains("is-open");
+
+      setMenuState(!isOpen);
+    }
+  );
+
+
+  /* -------------------------------------------------------
+     FECHAR AO CLICAR FORA
+     ------------------------------------------------------- */
+
+  document.addEventListener(
+    "click",
+    function(event) {
+
+      if (!menu.contains(event.target)) {
+        setMenuState(false);
+      }
+
+    }
+  );
+
+
+  /* -------------------------------------------------------
+     NAVEGAÇÃO
+     ------------------------------------------------------- */
+
+  items.forEach(function(item) {
+
+    item.addEventListener(
+      "click",
+      function() {
+
+        const targetId =
+          item.dataset.scrollTarget;
+
+      let target =
+        document.getElementById(targetId);
+
+
+      /* -------------------------------------------------------
+        MENSAGENS → LEVAR DIRETAMENTE AO FORMULÁRIO
+        ------------------------------------------------------- */
+
+      if (targetId === "guestbook") {
+
+        const guestbook =
+          document.getElementById("guestbook");
+
+        if (guestbook) {
+
+          const targetRect =
+            guestbook.getBoundingClientRect();
+
+          const topOffset = -5;
+
+          window.scrollTo({
+            top:
+              Math.max(
+                0,
+                window.scrollY +
+                targetRect.top -
+                topOffset
+              ),
+
+            behavior:
+              window.matchMedia(
+                "(prefers-reduced-motion: reduce)"
+              ).matches
+                ? "auto"
+                : "smooth"
+          });
+
+          setMenuState(false);
+
+          return;
+        }
+
+      }
+
+        if (!target) {
+
+          console.warn(
+            "Destino do menu não encontrado:",
+            targetId
+          );
+
+          return;
+        }
+
+
+        /*
+         * Fecha o menu antes do scroll.
+         * Isso evita que o painel fique sobre
+         * o conteúdo durante a animação.
+         */
+
+        setMenuState(false);
+
+
+        /*
+         * Centraliza a seção na viewport.
+         */
+
+        const targetRect =
+          target.getBoundingClientRect();
+
+        const targetCenter =
+          targetRect.top +
+          (targetRect.height / 2);
+
+        const viewportCenter =
+          window.innerHeight / 2;
+
+        const scrollPosition =
+          window.scrollY +
+          targetCenter -
+          viewportCenter;
+
+
+        window.scrollTo({
+          top: Math.max(0, scrollPosition),
+          behavior:
+            window.matchMedia(
+              "(prefers-reduced-motion: reduce)"
+            ).matches
+              ? "auto"
+              : "smooth"
+        });
+
+      }
+    );
+
+  });
+
+
+  /* -------------------------------------------------------
+     ESC
+     ------------------------------------------------------- */
+
+  document.addEventListener(
+    "keydown",
+    function(event) {
+
+      if (
+        event.key === "Escape" &&
+        menu.classList.contains("is-open")
+      ) {
+        setMenuState(false);
+        toggle.focus();
+      }
+
+    }
+  );
+
+
+  /* -------------------------------------------------------
+     ESTADO INICIAL
+     ------------------------------------------------------- */
+
+  setMenuState(false);
+
+}
+
+setupHubMenu();
+
 updateAge();
 
 loadCurrentPhrase();
@@ -1650,3 +1876,4 @@ if (newsletterForm) {
   );
 
 }
+

@@ -628,6 +628,7 @@ button {
   color: var(--terracotta);
   font-family: "Playfair Display", Georgia, serif;
   font-size: 1.1rem;
+  margin-bottom: 40px;
 }
 
 /* =========================================================
@@ -640,6 +641,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: absolute;
 
   width: 44px;
   height: 44px;
@@ -1188,4 +1190,382 @@ button {
   line-height: 1.4;
 
   text-align: center;
+}
+
+/* =========================================================
+    MENU
+   ========================================================= */
+
+.hub-menu {
+  position: absolute;
+
+  top: 18px;
+  right: 18px;
+
+  z-index: 20;
+}
+
+
+/* BOTÃO */
+
+.hub-menu-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 44px;
+  height: 44px;
+
+  padding: 0;
+
+  border: 1px solid rgba(255,255,255,.7);
+  border-radius: 50%;
+
+  background: rgba(255,250,244,.82);
+
+  box-shadow:
+    0 8px 24px rgba(83,45,31,.10);
+
+  backdrop-filter: blur(12px);
+
+  transition:
+    transform .25s ease,
+    background .25s ease;
+}
+
+.hub-menu-toggle:active {
+  transform: scale(.94);
+}
+
+
+/* HAMBURGER */
+
+.hub-menu-toggle-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+
+  width: 17px;
+}
+
+.hub-menu-toggle-icon span {
+  display: block;
+
+  width: 100%;
+  height: 1.5px;
+
+  border-radius: 99px;
+
+  background: var(--brown);
+
+  transition:
+    transform .25s ease,
+    opacity .2s ease;
+}
+
+.hub-menu.is-open .hub-menu-toggle-icon span:nth-child(1) {
+  transform: translateY(5.5px) rotate(45deg);
+}
+
+.hub-menu.is-open .hub-menu-toggle-icon span:nth-child(2) {
+  opacity: 0;
+}
+
+.hub-menu.is-open .hub-menu-toggle-icon span:nth-child(3) {
+  transform: translateY(-5.5px) rotate(-45deg);
+}
+
+.hub-menu-panel {
+  position: absolute;
+
+  top: 52px;
+  right: 0;
+
+  width: min(290px, calc(100vw - 36px));
+
+  padding: 7px;
+
+  border: 1px solid rgba(234,216,198,.9);
+  border-radius: 22px;
+
+  background: rgba(255,250,244,.94);
+
+  box-shadow:
+    0 18px 45px rgba(83,45,31,.14);
+
+  backdrop-filter: blur(18px);
+
+  opacity: 0;
+  visibility: hidden;
+
+  transform:
+    translateY(-8px)
+    scale(.97);
+
+  transform-origin: top right;
+
+  transition:
+    opacity .2s ease,
+    visibility .2s ease,
+    transform .2s ease;
+}
+
+.hub-menu.is-open .hub-menu-panel {
+  opacity: 1;
+  visibility: visible;
+
+  transform:
+    translateY(0)
+    scale(1);
+}
+
+.hub-menu-item {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+
+  min-height: 62px;
+
+  padding: 9px;
+
+  border-radius: 16px;
+
+  background: transparent;
+
+  text-align: left;
+
+  transition:
+    background .2s ease,
+    transform .2s ease;
+}
+
+.hub-menu-item:hover {
+  background: rgba(200,93,61,.07);
+}
+
+.hub-menu-item:active {
+  transform: scale(.98);
+}
+
+.hub-menu-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 38px;
+
+  width: 38px;
+  height: 38px;
+
+  margin-right: 11px;
+
+  border-radius: 12px;
+
+  background: var(--cream-2);
+}
+
+.hub-menu-item-icon img {
+  width: 21px;
+  height: 21px;
+
+  object-fit: contain;
+}
+
+.hub-menu-item-text {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+}
+
+.hub-menu-item-text strong {
+  color: var(--brown);
+
+  font-size: .76rem;
+  font-weight: 700;
+}
+
+.hub-menu-item-text small {
+  margin-top: 3px;
+
+  color: var(--muted);
+
+  font-size: .61rem;
+  font-weight: 400;
+}
+
+.hub-menu-item-arrow {
+  margin-left: auto;
+  padding-left: 10px;
+
+  color: var(--terracotta);
+
+  font-size: .95rem;
+
+  transition:
+    transform .2s ease;
+}
+
+.hub-menu-item:hover .hub-menu-item-arrow {
+  transform: translateX(3px);
+}
+
+@media (min-width: 768px) {
+
+  .eyebrow{
+    margin-top: 65px;
+  }
+
+  .hub-menu {
+    top: 24px;
+    right: 28px;
+  }
+
+  .hub-menu-toggle {
+    display: none;
+  }
+
+  .hub-menu-panel {
+    position: relative;
+
+    top: auto;
+    right: auto;
+
+    display: flex;
+
+    width: auto;
+
+    padding: 5px;
+
+    border-radius: 18px;
+
+    opacity: 1;
+    visibility: visible;
+
+    transform: none;
+  }
+
+  .hub-menu-item {
+    width: auto;
+
+    min-height: 48px;
+
+    padding: 6px 10px;
+  }
+
+  .hub-menu-item-icon {
+    flex-basis: 30px;
+
+    width: 30px;
+    height: 30px;
+
+    margin-right: 7px;
+
+    border-radius: 9px;
+  }
+
+  .hub-menu-item-icon img {
+    width: 17px;
+    height: 17px;
+  }
+
+  .hub-menu-item-text strong {
+    font-size: .67rem;
+  }
+
+  .hub-menu-item-text small {
+    display: none;
+  }
+
+  .hub-menu-item-arrow {
+    display: none;
+  }
+}
+
+/* =========================================================
+   ACESSO RÁPIDO — NEWSLETTER
+   ========================================================= */
+
+.newsletter-access {
+  position: absolute;
+
+  top: 18px;
+  right: 72px;
+
+  z-index: 20;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  min-height: 44px;
+
+  padding: 0 12px;
+
+  border: 1px solid rgba(255,255,255,.7);
+  border-radius: 999px;
+
+  background: rgba(255,250,244,.82);
+
+  color: var(--brown);
+
+  text-decoration: none;
+
+  box-shadow:
+    0 8px 24px rgba(83,45,31,.10);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  transition:
+    transform .2s ease,
+    background .2s ease;
+}
+
+.newsletter-access:hover {
+  background: rgba(255,250,244,.96);
+
+  transform: translateY(-1px);
+}
+
+.newsletter-access:active {
+  transform: scale(.96);
+}
+
+.newsletter-access img {
+  width: 17px;
+  height: 17px;
+
+  object-fit: contain;
+}
+
+.newsletter-access span {
+  font-size: .58rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+
+
+/* =========================================================
+   DESKTOP
+   ========================================================= */
+
+@media (min-width: 768px) {
+
+  .newsletter-access {
+    top: 30px;
+    left: 28px;
+    right: auto;
+
+    min-height: 48px;
+
+    padding: 0 14px;
+  }
+
+  .newsletter-access span {
+    font-size: .62rem;
+  }
+
 }
