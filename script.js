@@ -1000,9 +1000,6 @@ async function handleCommentSubmit(event) {
       likes: 0
     });
 
-  button.disabled = false;
-  button.textContent = "Publicar carinho ♥";
-
   if (error) {
     console.error("Erro ao publicar comentário:", error);
 
@@ -1012,14 +1009,63 @@ async function handleCommentSubmit(event) {
     return;
   }
 
-  event.target.reset();
+// ---------------------------------------------------------
+// NOTIFICAÇÃO INTERNA — NOVO COMENTÁRIO
+// ---------------------------------------------------------
 
-  $("charCount").textContent = "0";
+const notificationDate =
+  formatDateTime(new Date());
 
-  $("formNote").textContent =
-    "Mensagem publicada com carinho. ♥";
+const notificationContent =
+  `<strong>Nome:</strong> ${name}<br>` +
+  `<strong>Parentesco:</strong> ${relation}<br><br>` +
+  `${text}`;
 
-  await renderComments();
+
+const { error: serviceEmailError } =
+  await supabaseClient.functions.invoke(
+    "send-service-email",
+    {
+      body: {
+        subject:
+          "Novo carinho para o bebê",
+
+        content:
+          notificationContent,
+
+        date:
+          notificationDate
+      }
+    }
+  );
+
+
+if (serviceEmailError) {
+
+  console.error(
+    "Erro ao enviar notificação do comentário:",
+    serviceEmailError
+  );
+
+}
+
+
+// ---------------------------------------------------------
+// FINALIZAÇÃO
+// ---------------------------------------------------------
+
+event.target.reset();
+
+$("charCount").textContent = "0";
+
+$("formNote").textContent =
+  "Mensagem publicada com carinho. ♥";
+
+await renderComments();
+
+button.disabled = false;
+button.textContent = "Publicar carinho ♥";
+
 }
 
 async function handlePhraseLike(event) {
@@ -1857,14 +1903,83 @@ const newsletterNote =
 
 await newsletter.syncSubscriber(subscriberId);
 
-  newsletterForm.reset();
+
+// ---------------------------------------------------------
+// E-MAIL DE BOAS-VINDAS
+// ---------------------------------------------------------
+
+const { error: welcomeEmailError } =
+  await supabaseClient.functions.invoke(
+    "send-welcome-email",
+    {
+      body: {
+        name,
+        email
+      }
+    }
+  );
+
+if (welcomeEmailError) {
+
+  console.error(
+    "Erro ao enviar e-mail de boas-vindas:",
+    welcomeEmailError
+  );
+
+}
 
 
-  newsletterNote.textContent =
-    "Pronto! Você receberá os próximos capítulos ♥";
+// ---------------------------------------------------------
+// NOTIFICAÇÃO INTERNA — NOVA INSCRIÇÃO
+// ---------------------------------------------------------
+
+const notificationDate =
+  formatDateTime(new Date());
+
+const notificationContent =
+  `<strong>Nome:</strong> ${name}<br>` +
+  `<strong>E-mail:</strong> ${email}`;
 
 
-  submitButton.disabled = false;
+const { error: serviceEmailError } =
+  await supabaseClient.functions.invoke(
+    "send-service-email",
+    {
+      body: {
+        subject:
+          "Nova inscrição no Gestação Hub",
+
+        content:
+          notificationContent,
+
+        date:
+          notificationDate
+      }
+    }
+  );
+
+
+if (serviceEmailError) {
+
+  console.error(
+    "Erro ao enviar notificação interna:",
+    serviceEmailError
+  );
+
+}
+
+
+// ---------------------------------------------------------
+// FINALIZAÇÃO DA INSCRIÇÃO
+// ---------------------------------------------------------
+
+newsletterForm.reset();
+
+newsletterNote.textContent =
+  "Pronto! Você receberá os próximos capítulos ♥";
+
+submitButton.disabled = false;
+
 
 }
 
