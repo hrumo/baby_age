@@ -870,6 +870,125 @@ function markPhraseAsLiked(id) {
 
 }
 
+let commentsVisibleCount = null;
+let commentsUserInteracted = false;
+let commentsFullyExpanded = false;
+
+
+
+function getCommentsVisibleLimit() {
+
+  return window.matchMedia("(max-width: 650px)").matches
+    ? 5
+    : 3;
+
+}
+
+function updateCommentsVisibility(total, animate = true) {
+
+  const shells =
+    document.querySelectorAll(
+      "#commentsList .comment-shell"
+    );
+
+  const initialLimit =
+    getCommentsVisibleLimit();
+
+
+  if (!commentsUserInteracted) {
+
+    commentsVisibleCount =
+      Math.min(
+        initialLimit,
+        total
+      );
+
+  }
+
+  commentsVisibleCount =
+    Math.min(
+      Math.max(
+        commentsVisibleCount,
+        initialLimit
+      ),
+      total
+    );
+
+
+  shells.forEach((shell, index) => {
+
+    const hidden =
+      index >= commentsVisibleCount;
+
+
+    shell.classList.toggle(
+      "is-hidden",
+      hidden
+    );
+
+
+    shell.setAttribute(
+      "aria-hidden",
+      hidden ? "true" : "false"
+    );
+
+
+    shell.inert =
+      hidden;
+
+  });
+
+
+  const moreButton =
+    $("commentsMore");
+
+
+  if (!moreButton) {
+    return;
+  }
+
+
+  const hasMore =
+    total > initialLimit;
+
+
+  moreButton.hidden =
+    !hasMore;
+
+
+  if (!hasMore) {
+
+    return;
+
+  }
+
+
+  if (
+    commentsVisibleCount >= total
+  ) {
+
+    moreButton.textContent =
+      "Ocultar comentários ↑";
+
+    moreButton.setAttribute(
+      "aria-expanded",
+      "true"
+    );
+
+  } else {
+
+    moreButton.textContent =
+      "Ver mais comentários ↓";
+
+    moreButton.setAttribute(
+      "aria-expanded",
+      "false"
+    );
+
+  }
+
+}
+
 async function getComments() {
   const { data, error } = await supabaseClient
     .from("comments")
@@ -885,8 +1004,11 @@ async function getComments() {
 }
 
 async function renderComments() {
+
   const comments = await getComments();
+
   const list = $("commentsList");
+  const moreButton = $("commentsMore");
 
   $("commentCount").textContent =
     `${comments.length} ${
@@ -896,45 +1018,104 @@ async function renderComments() {
   list.innerHTML = "";
 
   if (!comments.length) {
+
     list.innerHTML = `
       <div class="empty-comments">
         Ainda não há mensagens.
         Seja o primeiro a deixar um carinho. ♥
       </div>
     `;
+
+    if (moreButton) {
+      moreButton.hidden = true;
+    }
+
     return;
   }
 
-  comments.forEach(comment => {
-    const article = document.createElement("article");
+  comments.forEach((comment, index) => {
+
+    const article =
+      document.createElement("article");
+
     article.className = "comment";
 
-    const top = document.createElement("div");
-    top.className = "comment-top";
+    // ---------------------------------------------------------
+    // CABEÇALHO
+    // ---------------------------------------------------------
 
-    const identity = document.createElement("div");
+    const top =
+      document.createElement("div");
 
-    const name = document.createElement("div");
-    name.className = "comment-name";
-    name.textContent = comment.name;
+    top.className =
+      "comment-top";
 
-    const relation = document.createElement("div");
-    relation.className = "comment-relation";
-    relation.textContent = comment.relation;
 
-    identity.append(name, relation);
+    const identity =
+      document.createElement("div");
 
-    const date = document.createElement("div");
-    date.className = "comment-date";
-    date.textContent = formatDateTime(
-      new Date(comment.created_at)
+
+    const name =
+      document.createElement("div");
+
+    name.className =
+      "comment-name";
+
+    name.textContent =
+      comment.name;
+
+
+    const relation =
+      document.createElement("div");
+
+    relation.className =
+      "comment-relation";
+
+    relation.textContent =
+      comment.relation;
+
+
+    identity.append(
+      name,
+      relation
     );
 
-    top.append(identity, date);
 
-    const text = document.createElement("div");
-    text.className = "comment-text";
-    text.textContent = comment.text;
+    const date =
+      document.createElement("div");
+
+    date.className =
+      "comment-date";
+
+    date.textContent =
+      formatDateTime(
+        new Date(comment.created_at)
+      );
+
+
+    top.append(
+      identity,
+      date
+    );
+
+
+    // ---------------------------------------------------------
+    // MENSAGEM
+    // ---------------------------------------------------------
+
+    const text =
+      document.createElement("div");
+
+    text.className =
+      "comment-text";
+
+    text.textContent =
+      comment.text;
+
+
+    // ---------------------------------------------------------
+    // LIKE
+    // ---------------------------------------------------------
 
     const like =
       document.createElement("button");
@@ -942,16 +1123,20 @@ async function renderComments() {
     like.type =
       "button";
 
+
     const alreadyLiked =
       hasLikedComment(comment.id);
+
 
     like.className =
       `like-button comment-like-button ${
         alreadyLiked ? "liked" : ""
       }`;
 
+
     like.dataset.id =
       comment.id;
+
 
     like.setAttribute(
       "aria-label",
@@ -960,17 +1145,49 @@ async function renderComments() {
         : "Curtir mensagem"
     );
 
+
     like.disabled =
       alreadyLiked;
 
+
     like.innerHTML = `
       <span class="like-icon">♥</span>
-      <span class="like-count">${comment.likes || 0}</span>
+      <span class="like-count">
+        ${comment.likes || 0}
+      </span>
     `;
 
-    article.append(top, text, like);
-    list.appendChild(article);
+
+    article.append(
+      top,
+      text,
+      like
+    );
+
+
+    const shell =
+      document.createElement("div");
+
+    shell.className =
+      "comment-shell";
+
+    shell.appendChild(
+      article
+    );
+
+    list.appendChild(
+      shell
+    );
+
   });
+
+  // ---------------------------------------------------------
+  // ATUALIZAR VISIBILIDADE DOS COMENTÁRIOS
+  // ---------------------------------------------------------
+
+  updateCommentsVisibility(comments.length);
+
+
 }
 
 async function handleCommentSubmit(event) {
@@ -1256,6 +1473,71 @@ $("updatesList").addEventListener(
 $("commentsList").addEventListener(
   "click",
   handleCommentLike
+);
+
+$("commentsMore").addEventListener(
+  "click",
+  () => {
+
+    const total =
+      document.querySelectorAll(
+        "#commentsList .comment-shell"
+      ).length;
+
+    const step =
+      getCommentsVisibleLimit();
+
+    const initialLimit =
+      getCommentsVisibleLimit();
+
+
+    if (!total) {
+      return;
+    }
+
+
+    commentsUserInteracted = true;
+
+
+    // ---------------------------------------------------------
+    // TODOS ABERTOS → VOLTAR DIRETAMENTE AO LIMITE INICIAL
+    // ---------------------------------------------------------
+
+    if (commentsVisibleCount >= total) {
+
+      commentsVisibleCount =
+        Math.min(
+          initialLimit,
+          total
+        );
+
+      commentsFullyExpanded = false;
+      commentsCollapsing = false;
+
+    }
+
+
+    // ---------------------------------------------------------
+    // MOSTRAR MAIS COMENTÁRIOS
+    // ---------------------------------------------------------
+
+    else {
+
+      commentsVisibleCount =
+        Math.min(
+          total,
+          commentsVisibleCount + step
+        );
+
+      commentsFullyExpanded =
+        commentsVisibleCount >= total;
+
+    }
+
+
+    updateCommentsVisibility(total);
+
+  }
 );
 
 $("commentForm").addEventListener(
