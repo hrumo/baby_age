@@ -1,5 +1,7 @@
+/* =========================================================
+   START — CONFIGURAÇÕES
+   ========================================================= */
 const SUPABASE_URL = "https://amborvbsyzhalpgxfdac.supabase.co";
-
 const SUPABASE_KEY = "sb_publishable_VqccUBZAGdVco1H8ouB-Fg_YypNRDSS";
 
 const supabaseClient = window.supabase.createClient(
@@ -22,107 +24,14 @@ const LIKED_COMMENTS_KEY = "babyAgeLikedComments";
 const LIKED_POSTS_KEY = "babyAgeLikedPosts";
 const LIKED_PHRASES_KEY = "babyAgeLikedPhrases";
 
-const phrases = [
-  "Toda grande história começa antes mesmo de sabermos que ela está acontecendo. E, de algum jeito, a nossa já começou.",
-
-  "Ainda não sabemos quem você será, mas a vida já começa a preparar o caminho para que, um dia, possamos te encontrar.",
-
-  "Enquanto tudo ainda parece pequeno e invisível, uma das maiores histórias das nossas vidas começa a ganhar forma.",
-
-  "Talvez você ainda seja apenas uma possibilidade aos olhos do mundo. Para nós, já existe uma história esperando para ser contada.",
-
-  "Pequeno no tamanho, imenso no significado. Nesta semana, seu desenvolvimento acontece em um ritmo extraordinário — e nossa imaginação já começa a correr longe.",
-
-  "Seu coração está começando a entrar em cena, enquanto estruturas fundamentais do seu corpo continuam se formando. E aqui fora, dois corações já aprenderam a bater diferente por você.",
-
-  "A cada dia, novas estruturas se desenvolvem e o corpo ganha contornos cada vez mais definidos. Você ainda é tão pequeno, mas já ocupa um espaço enorme na nossa vida.",
-
-  "Você está crescendo depressa. Pequenas partes começam a se tornar mais reconhecíveis, enquanto uma pessoa inteira, com uma história só sua, começa a tomar forma.",
-
-  "A fase embrionária chega ao fim e uma nova etapa começa. Daqui para frente, crescer, amadurecer e descobrir serão partes cada vez maiores da sua jornada.",
-
-  "Seu corpo continua se organizando de maneira impressionante. E nós seguimos descobrindo que esperar por alguém também é uma forma de conhecê-lo.",
-
-  "Você cresce, se movimenta e continua amadurecendo, mesmo que ainda não possamos sentir tudo isso daqui. A espera também tem seus pequenos sinais.",
-
-  "Doze semanas. Um primeiro grande capítulo se completa. O que começou quase invisível já se transformou em uma pequena vida cheia de possibilidades.",
-
-  "O segundo trimestre se aproxima trazendo uma nova fase de crescimento. Para nós, cada nova semana parece dizer a mesma coisa: você está cada vez mais perto de nós.",
-
-  "Agora, crescer passa a ser uma parte ainda mais importante da sua jornada. E, enquanto você ganha espaço por aí, ganha também espaço cada vez maior dentro da nossa história.",
-
-  "Seus movimentos ainda podem ser silenciosos para nós, mas nada sobre essa espera é silencioso por aqui. Cada dia traz uma nova pergunta, uma nova descoberta e um pouco mais de amor.",
-
-  "Você já está se tornando cada vez mais proporcional e definido. Nós, por outro lado, continuamos tentando imaginar como será finalmente olhar para você.",
-
-  "Enquanto seus sentidos e movimentos continuam se desenvolvendo, nossa espera também ganha novas formas. Já conseguimos imaginar o som da sua voz, o seu olhar e o primeiro abraço.",
-
-  "Você continua crescendo e descobrindo o mundo antes mesmo de chegar a ele. E nós seguimos descobrindo, pouco a pouco, o que significa ser sua família.",
-
-  "Quase metade da gestação. Parece que foi ontem que descobrimos você, mas já existe uma quantidade enorme de histórias que só aconteceram porque você chegou.",
-
-  "Metade do caminho. Vinte semanas de crescimento, descobertas e expectativas. Ainda falta um pouco para o encontro, mas a nossa vida já mudou para sempre.",
-
-  "Você continua crescendo, seus movimentos ganham força e seus sentidos amadurecem. Enquanto isso, começamos a perceber que esperar por você também está criando memórias.",
-
-  "Cada semana acrescenta um novo detalhe à pessoa que você está se tornando. Nós ainda não conhecemos seu rosto, mas já reconhecemos o sentimento que você despertou em nós.",
-
-  "Seu corpo continua amadurecendo e seus movimentos podem ficar cada vez mais perceptíveis. É curioso pensar que, antes mesmo do primeiro encontro, você já consegue nos fazer sorrir sem dizer uma palavra.",
-
-  "Seis meses se aproximam e a ideia de te conhecer começa a parecer cada vez menos distante. Você ainda está crescendo, e nós já estamos crescendo junto com você.",
-
-  "O tempo passa e você ganha cada vez mais força. Por aqui, a expectativa também ganha peso — mas é daquele tipo bom, que transforma cada dia comum em parte de uma história especial.",
-
-  "Você já percorreu um longo caminho desde aquelas primeiras semanas. Agora, cada novo dia é uma pequena preparação para o mundo que espera por você.",
-
-  "O segundo trimestre está chegando ao fim. Você continua amadurecendo, crescendo e se preparando, enquanto nós começamos a perceber que a reta final está logo ali.",
-
-  "Bem-vindo ao terceiro trimestre. A última grande etapa da gestação começa, e o encontro que parecia tão distante agora já consegue ser imaginado no calendário.",
-
-  "Seu cérebro, seus sentidos e seu corpo continuam amadurecendo. Você está se preparando para conhecer o mundo; nós estamos nos preparando para finalmente conhecê-lo com você.",
-
-  "Trinta semanas. Já existe uma história inteira entre o dia em que descobrimos você e o momento em que finalmente poderemos te segurar nos braços.",
-
-  "Cada movimento, cada consulta e cada nova semana nos aproxima um pouco mais. Você ainda está crescendo aí dentro, enquanto o amor já encontrou espaço suficiente aqui fora.",
-
-  "A reta final começa a ganhar forma. Você continua ganhando força e maturidade, e nós começamos a contar não apenas semanas, mas os dias que faltam para te conhecer.",
-
-  "Seu corpo continua se preparando para a vida fora do útero. E nós continuamos preparando tudo por aqui — inclusive o coração, embora ele provavelmente nunca esteja completamente preparado.",
-
-  "Falta cada vez menos. Entre consultas, planos, expectativas e pequenas ansiedades, existe uma certeza que permanece: estamos esperando por você.",
-
-  "Você já percorreu quase toda essa jornada. Em breve, aquilo que durante meses foi imaginado, acompanhado e esperado terá um rosto, um nome, um choro e um primeiro abraço.",
-
-  "A reta final chegou. Seu desenvolvimento continua avançando enquanto, por aqui, cada detalhe parece ganhar outro significado. Você está quase chegando.",
-
-  "A partir daqui, cada dia pode carregar uma expectativa diferente. O tempo continua passando, mas agora existe uma sensação nova: o nosso encontro pode estar muito perto.",
-
-  "Trinta e oito semanas. Durante todo esse tempo, você foi crescendo sem que pudéssemos te abraçar. Em breve, finalmente vamos trocar a espera pelo encontro.",
-
-  "Quase tudo já está pronto para você. Talvez ainda faltem alguns dias, talvez menos do que imaginamos. Mas uma coisa é certa: estamos prontos para te conhecer.",
-
-  "Quarenta semanas de espera, crescimento, descobertas, consultas, sonhos e amor. Uma história inteira chegou até aqui — e agora começa o capítulo que mais esperamos: finalmente conhecer você."
-];
-
-async function getCurrentPhrase() {
-  const age = calculateGestationalAge(new Date());
-
-  const { data, error } = await supabaseClient
-    .from("phrases")
-    .select("id, week, phrase, likes")
-    .eq("week", age.weeks)
-    .single();
-
-  if (error) {
-    console.error("Erro ao carregar phrase:", error);
-    return null;
-  }
-
-  return data;
-}
-
 const $ = (id) => document.getElementById(id);
+/* =========================================================
+   END — CONFIGURAÇÕES
+   ========================================================= */
 
+  /* =========================================================
+   START — UTILITÁRIOS / DATAS
+   ========================================================= */
 function parseLocalDate(dateString) {
   const [year, month, day] = dateString.split("-").map(Number);
   return new Date(year, month - 1, day);
@@ -169,7 +78,13 @@ function calculateGestationalAge(now) {
     days
   };
 }
+/* =========================================================
+   END — UTILITÁRIOS / DATAS
+   ========================================================= */
 
+/* =========================================================
+   START — IDADE GESTACIONAL / CONTADORES
+   ========================================================= */
 const quoteSign = document.querySelector('.quote-sign')
 
 function updateAge() {
@@ -217,119 +132,6 @@ function updateAge() {
     `${seconds.toString().padStart(2, "0")} segundos`;
 
   updateMilestones(now);
-}
-
-let currentPhrase = null;
-
-async function loadCurrentPhrase() {
-  const age =
-    calculateGestationalAge(new Date());
-
-  const {
-    data,
-    error
-  } = await supabaseClient
-    .from("phrases")
-    .select(
-      "id, week, phrase, likes"
-    )
-    .eq(
-      "week",
-      age.weeks
-    )
-    .maybeSingle();
-
-  if (error) {
-
-    console.error(
-      "Erro ao carregar Phrase:",
-      error
-    );
-
-    return;
-
-  }
-
-  if (!data) {
-
-    console.error(
-      "Nenhuma Phrase encontrada."
-    );
-
-    return;
-
-  }
-
-  // ---------------------------------------------
-  // Texto
-  // ---------------------------------------------
-
-  $("dailyPhrase").textContent =
-    data.phrase;
-
-
-  // ---------------------------------------------
-  // Semana
-  // ---------------------------------------------
-
-  $("phraseWeek").textContent =
-    `${data.week}ª semana`;
-
-
-  // ---------------------------------------------
-  // Botão
-  // ---------------------------------------------
-
-  const button =
-    document.getElementById(
-      "phraseLikeButton"
-    );
-
-  const count =
-    document.getElementById(
-      "phraseLikeCount"
-    );
-
-
-  if (!button) {
-
-    console.error(
-      "phraseLikeButton não encontrado."
-    );
-
-    return;
-
-  }
-
-
-  // ID da Phrase
-  button.dataset.id =
-    data.id;
-
-
-  // Contador
-  if (count) {
-
-    count.textContent =
-      data.likes || 0;
-
-  }
-
-
-  // Estado de Like
-  const alreadyLiked =
-    hasLikedPhrase(data.id);
-
-
-  button.classList.toggle(
-    "liked",
-    alreadyLiked
-  );
-
-
-  button.disabled =
-    alreadyLiked;
-
 }
 
 function getGestationalDate(targetWeeks, targetDays = 0) {
@@ -485,7 +287,116 @@ milestones.forEach((item, index) => {
 }
 
 /* =========================================================
-   ATUALIZAÇÕES
+   END — IDADE GESTACIONAL / CONTADORES
+   ========================================================= */
+
+ /* =========================================================
+   START — PHRASE DA SEMANA
+   ========================================================= */ 
+let currentPhrase = null;
+
+async function loadCurrentPhrase() {
+  const age =
+    calculateGestationalAge(new Date());
+
+  const {
+    data,
+    error
+  } = await supabaseClient
+    .from("phrases")
+    .select(
+      "id, week, phrase, likes"
+    )
+    .eq(
+      "week",
+      age.weeks
+    )
+    .maybeSingle();
+
+  if (error) {
+
+    console.error(
+      "Erro ao carregar Phrase:",
+      error
+    );
+
+    return;
+
+  }
+
+  if (!data) {
+
+    console.error(
+      "Nenhuma Phrase encontrada."
+    );
+
+    return;
+
+  }
+
+  $("dailyPhrase").textContent =
+    data.phrase;
+
+
+  $("phraseWeek").textContent =
+    `${data.week}ª semana`;
+
+  const button =
+    document.getElementById(
+      "phraseLikeButton"
+    );
+
+  const count =
+    document.getElementById(
+      "phraseLikeCount"
+    );
+
+
+  if (!button) {
+
+    console.error(
+      "phraseLikeButton não encontrado."
+    );
+
+    return;
+
+  }
+
+  // ID da Phrase
+  button.dataset.id =
+    data.id;
+
+
+  // Contador
+  if (count) {
+
+    count.textContent =
+      data.likes || 0;
+
+  }
+
+
+  // Estado de Like
+  const alreadyLiked =
+    hasLikedPhrase(data.id);
+
+
+  button.classList.toggle(
+    "liked",
+    alreadyLiked
+  );
+
+
+  button.disabled =
+    alreadyLiked;
+
+}
+/* =========================================================
+   END — PHRASE DA SEMANA
+   ========================================================= */
+
+/* =========================================================
+   START — ATUALIZAÇÕES / POSTS
    ========================================================= */
 
 async function getUpdates() {
@@ -523,11 +434,6 @@ async function getUpdates() {
 
   return data || [];
 }
-
-
-/* =========================================================
-   RENDERIZAR ATUALIZAÇÕES
-   ========================================================= */
 
 async function renderUpdates() {
 
@@ -568,10 +474,6 @@ async function renderUpdates() {
       "update-card";
 
 
-    /* -----------------------------------------------------
-       MÍDIA / BANNER
-       ----------------------------------------------------- */
-
     const media =
       document.createElement("div");
 
@@ -596,11 +498,6 @@ async function renderUpdates() {
 
 
     media.appendChild(image);
-
-
-    /* -----------------------------------------------------
-       CONTEÚDO
-       ----------------------------------------------------- */
 
     const content =
       document.createElement("div");
@@ -647,25 +544,12 @@ async function renderUpdates() {
       text
     );
 
-
-    /* -----------------------------------------------------
-       LINK EXTERNO — OPCIONAL
-       ----------------------------------------------------- */
-
-      /* -----------------------------------------------------
-      RODAPÉ DO POST
-      ----------------------------------------------------- */
-
       const footer =
         document.createElement("div");
 
       footer.className =
         "update-footer";
 
-
-      /* -----------------------------------------------------
-        LIKE
-        ----------------------------------------------------- */
 
       const like =
         document.createElement("button");
@@ -699,11 +583,6 @@ async function renderUpdates() {
         <span class="like-count">${update.likes || 0}</span>
       `;
 
-
-      /* -----------------------------------------------------
-        LINK EXTERNO — OPCIONAL
-        ----------------------------------------------------- */
-
       if (update.media_url) {
 
         const link =
@@ -729,11 +608,6 @@ async function renderUpdates() {
         footer.appendChild(link);
       }
 
-
-      /* -----------------------------------------------------
-        ADICIONAR LIKE + LINK
-        ----------------------------------------------------- */
-
       footer.prepend(like);
 
       content.appendChild(footer);
@@ -754,6 +628,135 @@ async function renderUpdates() {
 
 }
 
+function setupUpdatesNavigation() {
+
+  const slider =
+    $("updatesList");
+
+  const previousButton =
+    document.querySelector(
+      ".updates-arrow-prev"
+    );
+
+  const nextButton =
+    document.querySelector(
+      ".updates-arrow-next"
+    );
+
+
+  if (
+    !slider ||
+    !previousButton ||
+    !nextButton
+  ) {
+    return;
+  }
+
+  function updateArrowState() {
+
+    const maxScroll =
+      slider.scrollWidth -
+      slider.clientWidth;
+
+
+    const currentScroll =
+      slider.scrollLeft;
+
+
+    const hasOverflow =
+      maxScroll > 5;
+
+
+    previousButton.disabled =
+      !hasOverflow ||
+      currentScroll <= 5;
+
+
+    nextButton.disabled =
+      !hasOverflow ||
+      currentScroll >= maxScroll - 5;
+
+
+    previousButton.style.display =
+      hasOverflow ? "" : "none";
+
+    nextButton.style.display =
+      hasOverflow ? "" : "none";
+  }
+
+  function getScrollAmount() {
+
+    const firstCard =
+      slider.querySelector(
+        ".update-card"
+      );
+
+
+    if (!firstCard) {
+      return slider.clientWidth * 0.85;
+    }
+
+
+    const gap =
+      parseFloat(
+        getComputedStyle(slider).gap
+      ) || 0;
+
+
+    return firstCard.offsetWidth + gap;
+  }
+
+
+  previousButton.addEventListener(
+    "click",
+    () => {
+
+      slider.scrollBy({
+        left: -getScrollAmount(),
+        behavior: "smooth"
+      });
+
+    }
+  );
+
+  nextButton.addEventListener(
+    "click",
+    () => {
+
+      slider.scrollBy({
+        left: getScrollAmount(),
+        behavior: "smooth"
+      });
+
+    }
+  );
+
+
+  slider.addEventListener(
+    "scroll",
+    updateArrowState,
+    {
+      passive: true
+    }
+  );
+
+  window.addEventListener(
+    "resize",
+    updateArrowState
+  );
+
+  /* Estado inicial */
+  updateArrowState();
+
+}
+
+/* =========================================================
+   END — ATUALIZAÇÕES / POSTS
+   ========================================================= */
+
+/* =========================================================
+   START — LIKES / PERSISTÊNCIA LOCAL
+   ========================================================= */
 function getLikedComments() {
   try {
     return JSON.parse(
@@ -870,10 +873,17 @@ function markPhraseAsLiked(id) {
 
 }
 
+/* =========================================================
+   END — LIKES / PERSISTÊNCIA LOCAL
+   ========================================================= */
+
+   /* =========================================================
+   START — COMENTÁRIOS / GUESTBOOK
+   ========================================================= */
+
 let commentsVisibleCount = null;
 let commentsUserInteracted = false;
 let commentsFullyExpanded = false;
-
 
 
 function getCommentsVisibleLimit() {
@@ -1040,10 +1050,6 @@ async function renderComments() {
 
     article.className = "comment";
 
-    // ---------------------------------------------------------
-    // CABEÇALHO
-    // ---------------------------------------------------------
-
     const top =
       document.createElement("div");
 
@@ -1098,11 +1104,6 @@ async function renderComments() {
       date
     );
 
-
-    // ---------------------------------------------------------
-    // MENSAGEM
-    // ---------------------------------------------------------
-
     const text =
       document.createElement("div");
 
@@ -1111,11 +1112,6 @@ async function renderComments() {
 
     text.textContent =
       comment.text;
-
-
-    // ---------------------------------------------------------
-    // LIKE
-    // ---------------------------------------------------------
 
     const like =
       document.createElement("button");
@@ -1157,7 +1153,6 @@ async function renderComments() {
       </span>
     `;
 
-
     article.append(
       top,
       text,
@@ -1180,10 +1175,6 @@ async function renderComments() {
     );
 
   });
-
-  // ---------------------------------------------------------
-  // ATUALIZAR VISIBILIDADE DOS COMENTÁRIOS
-  // ---------------------------------------------------------
 
   updateCommentsVisibility(comments.length);
 
@@ -1226,10 +1217,6 @@ async function handleCommentSubmit(event) {
     return;
   }
 
-// ---------------------------------------------------------
-// NOTIFICAÇÃO INTERNA — NOVO COMENTÁRIO
-// ---------------------------------------------------------
-
 const notificationDate =
   formatDateTime(new Date());
 
@@ -1265,11 +1252,6 @@ if (serviceEmailError) {
   );
 
 }
-
-
-// ---------------------------------------------------------
-// FINALIZAÇÃO
-// ---------------------------------------------------------
 
 event.target.reset();
 
@@ -1373,26 +1355,11 @@ async function handlePostLike(event) {
 
   }
 
-
-  // ---------------------------------------------
-  // Já curtiu este Post neste navegador
-  // ---------------------------------------------
-
   if (hasLikedPost(id)) {
     return;
   }
 
-
-  // ---------------------------------------------
-  // Bloqueia durante a requisição
-  // ---------------------------------------------
-
   button.disabled = true;
-
-
-  // ---------------------------------------------
-  // Incrementa no Supabase
-  // ---------------------------------------------
 
   const { error } =
     await supabaseClient.rpc(
@@ -1402,10 +1369,6 @@ async function handlePostLike(event) {
       }
     );
 
-
-  // ---------------------------------------------
-  // Erro
-  // ---------------------------------------------
 
   if (error) {
 
@@ -1419,24 +1382,9 @@ async function handlePostLike(event) {
     return;
   }
 
-
-  // ---------------------------------------------
-  // Salva Like localmente
-  // ---------------------------------------------
-
   markPostAsLiked(id);
 
-
-  // ---------------------------------------------
-  // Estado visual
-  // ---------------------------------------------
-
   button.classList.add("liked");
-
-
-  // ---------------------------------------------
-  // Atualiza contador
-  // ---------------------------------------------
 
   const count =
     button.querySelector(".like-count");
@@ -1455,11 +1403,6 @@ async function handlePostLike(event) {
       currentLikes + 1;
 
   }
-
-
-  // ---------------------------------------------
-  // Mantém bloqueado
-  // ---------------------------------------------
 
   button.disabled = true;
 
@@ -1498,11 +1441,6 @@ $("commentsMore").addEventListener(
 
     commentsUserInteracted = true;
 
-
-    // ---------------------------------------------------------
-    // TODOS ABERTOS → VOLTAR DIRETAMENTE AO LIMITE INICIAL
-    // ---------------------------------------------------------
-
     if (commentsVisibleCount >= total) {
 
       commentsVisibleCount =
@@ -1515,11 +1453,6 @@ $("commentsMore").addEventListener(
       commentsCollapsing = false;
 
     }
-
-
-    // ---------------------------------------------------------
-    // MOSTRAR MAIS COMENTÁRIOS
-    // ---------------------------------------------------------
 
     else {
 
@@ -1581,26 +1514,11 @@ async function handleCommentLike(event) {
     return;
   }
 
-
-  // ---------------------------------------------
-  // Já curtiu este comentário neste navegador
-  // ---------------------------------------------
-
   if (hasLikedComment(id)) {
     return;
   }
 
-
-  // ---------------------------------------------
-  // Bloqueia durante a requisição
-  // ---------------------------------------------
-
   button.disabled = true;
-
-
-  // ---------------------------------------------
-  // Incrementa no Supabase
-  // ---------------------------------------------
 
   const { error } =
     await supabaseClient.rpc(
@@ -1609,11 +1527,6 @@ async function handleCommentLike(event) {
         comment_id: id
       }
     );
-
-
-  // ---------------------------------------------
-  // Erro
-  // ---------------------------------------------
 
   if (error) {
 
@@ -1627,26 +1540,11 @@ async function handleCommentLike(event) {
     return;
   }
 
-
-  // ---------------------------------------------
-  // Salva Like localmente
-  // ---------------------------------------------
-
   markCommentAsLiked(id);
-
-
-  // ---------------------------------------------
-  // Estado visual
-  // ---------------------------------------------
 
   button.classList.add(
     "liked"
   );
-
-
-  // ---------------------------------------------
-  // Atualiza contador
-  // ---------------------------------------------
 
   const count =
     button.querySelector(
@@ -1667,10 +1565,6 @@ async function handleCommentLike(event) {
       currentLikes + 1;
   }
 
-
-  // ---------------------------------------------
-  // Mantém bloqueado
-  // ---------------------------------------------
 
   button.disabled = true;
 
@@ -1701,166 +1595,12 @@ function startRealtime() {
     .subscribe();
 
 }
-
 /* =========================================================
-   NAVEGAÇÃO DAS ATUALIZAÇÕES
+   END — COMENTÁRIOS / GUESTBOOK
    ========================================================= */
 
-function setupUpdatesNavigation() {
-
-  const slider =
-    $("updatesList");
-
-  const previousButton =
-    document.querySelector(
-      ".updates-arrow-prev"
-    );
-
-  const nextButton =
-    document.querySelector(
-      ".updates-arrow-next"
-    );
-
-
-  if (
-    !slider ||
-    !previousButton ||
-    !nextButton
-  ) {
-    return;
-  }
-
-
-  /* -------------------------------------------------------
-     ATUALIZAR ESTADO DAS SETAS
-     ------------------------------------------------------- */
-
-  function updateArrowState() {
-
-    const maxScroll =
-      slider.scrollWidth -
-      slider.clientWidth;
-
-
-    const currentScroll =
-      slider.scrollLeft;
-
-
-    const hasOverflow =
-      maxScroll > 5;
-
-
-    previousButton.disabled =
-      !hasOverflow ||
-      currentScroll <= 5;
-
-
-    nextButton.disabled =
-      !hasOverflow ||
-      currentScroll >= maxScroll - 5;
-
-
-    previousButton.style.display =
-      hasOverflow ? "" : "none";
-
-    nextButton.style.display =
-      hasOverflow ? "" : "none";
-  }
-
-
-  /* -------------------------------------------------------
-     DISTÂNCIA DE CADA MOVIMENTO
-     ------------------------------------------------------- */
-
-  function getScrollAmount() {
-
-    const firstCard =
-      slider.querySelector(
-        ".update-card"
-      );
-
-
-    if (!firstCard) {
-      return slider.clientWidth * 0.85;
-    }
-
-
-    const gap =
-      parseFloat(
-        getComputedStyle(slider).gap
-      ) || 0;
-
-
-    return firstCard.offsetWidth + gap;
-  }
-
-
-  /* -------------------------------------------------------
-     SETA ESQUERDA
-     ------------------------------------------------------- */
-
-  previousButton.addEventListener(
-    "click",
-    () => {
-
-      slider.scrollBy({
-        left: -getScrollAmount(),
-        behavior: "smooth"
-      });
-
-    }
-  );
-
-
-  /* -------------------------------------------------------
-     SETA DIREITA
-     ------------------------------------------------------- */
-
-  nextButton.addEventListener(
-    "click",
-    () => {
-
-      slider.scrollBy({
-        left: getScrollAmount(),
-        behavior: "smooth"
-      });
-
-    }
-  );
-
-
-  /* -------------------------------------------------------
-     ATUALIZAR DURANTE O SCROLL
-     ------------------------------------------------------- */
-
-  slider.addEventListener(
-    "scroll",
-    updateArrowState,
-    {
-      passive: true
-    }
-  );
-
-
-  /* -------------------------------------------------------
-     ATUALIZAR AO REDIMENSIONAR
-     ------------------------------------------------------- */
-
-  window.addEventListener(
-    "resize",
-    updateArrowState
-  );
-
-
-  /* Estado inicial */
-
-  updateArrowState();
-
-}
-
-
 /* =========================================================
-   MENU DO HUB
+   START — MENU DO HUB
    ========================================================= */
 
 function setupHubMenu() {
@@ -1875,11 +1615,6 @@ function setupHubMenu() {
 
   const items =
     menu.querySelectorAll(".hub-menu-item");
-
-
-  /* -------------------------------------------------------
-     ABRIR / FECHAR
-     ------------------------------------------------------- */
 
   function setMenuState(isOpen) {
 
@@ -1906,11 +1641,6 @@ function setupHubMenu() {
     );
   }
 
-
-  /* -------------------------------------------------------
-     BOTÃO
-     ------------------------------------------------------- */
-
   toggle.addEventListener(
     "click",
     function(event) {
@@ -1924,11 +1654,6 @@ function setupHubMenu() {
     }
   );
 
-
-  /* -------------------------------------------------------
-     FECHAR AO CLICAR FORA
-     ------------------------------------------------------- */
-
   document.addEventListener(
     "click",
     function(event) {
@@ -1939,11 +1664,6 @@ function setupHubMenu() {
 
     }
   );
-
-
-  /* -------------------------------------------------------
-     NAVEGAÇÃO
-     ------------------------------------------------------- */
 
   items.forEach(function(item) {
 
@@ -1956,11 +1676,6 @@ function setupHubMenu() {
 
       let target =
         document.getElementById(targetId);
-
-
-      /* -------------------------------------------------------
-        MENSAGENS → LEVAR DIRETAMENTE AO FORMULÁRIO
-        ------------------------------------------------------- */
 
       if (targetId === "guestbook") {
 
@@ -2053,11 +1768,6 @@ function setupHubMenu() {
 
   });
 
-
-  /* -------------------------------------------------------
-     ESC
-     ------------------------------------------------------- */
-
   document.addEventListener(
     "keydown",
     function(event) {
@@ -2073,30 +1783,17 @@ function setupHubMenu() {
     }
   );
 
-
-  /* -------------------------------------------------------
-     ESTADO INICIAL
-     ------------------------------------------------------- */
-
   setMenuState(false);
 
 }
 
-setupHubMenu();
+/* =========================================================
+   END — MENU DO HUB
+   ========================================================= */
 
-updateAge();
-
-loadCurrentPhrase();
-
-renderUpdates();
-
-setupUpdatesNavigation();
-
-renderComments();
-
-startRealtime();
-
-setInterval(updateAge, 1000);
+/* =========================================================
+   START — NEWSLETTER
+   ========================================================= */
 
 const newsletterForm =
   document.getElementById("newsletterForm");
@@ -2185,11 +1882,6 @@ const newsletterNote =
 
 await newsletter.syncSubscriber(subscriberId);
 
-
-// ---------------------------------------------------------
-// E-MAIL DE BOAS-VINDAS
-// ---------------------------------------------------------
-
 const { error: welcomeEmailError } =
   await supabaseClient.functions.invoke(
     "send-welcome-email",
@@ -2209,11 +1901,6 @@ if (welcomeEmailError) {
   );
 
 }
-
-
-// ---------------------------------------------------------
-// NOTIFICAÇÃO INTERNA — NOVA INSCRIÇÃO
-// ---------------------------------------------------------
 
 const notificationDate =
   formatDateTime(new Date());
@@ -2250,11 +1937,6 @@ if (serviceEmailError) {
 
 }
 
-
-// ---------------------------------------------------------
-// FINALIZAÇÃO DA INSCRIÇÃO
-// ---------------------------------------------------------
-
 newsletterForm.reset();
 
 newsletterNote.textContent =
@@ -2274,3 +1956,28 @@ if (newsletterForm) {
 
 }
 
+/* =========================================================
+   END — NEWSLETTER
+   ========================================================= */
+
+  /* =========================================================
+  START — INICIALIZAÇÃO
+  ========================================================= */
+setupHubMenu();
+
+updateAge();
+
+loadCurrentPhrase();
+
+renderUpdates();
+
+setupUpdatesNavigation();
+
+renderComments();
+
+startRealtime();
+
+setInterval(updateAge, 1000);
+/* =========================================================
+   END — INICIALIZAÇÃO
+   ========================================================= */

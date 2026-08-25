@@ -5,7 +5,7 @@
 
 
 /* =========================================================
-   SUPABASE
+   START — SUPABASE
    ========================================================= */
 
 const SUPABASE_URL =
@@ -22,7 +22,12 @@ const supabaseClient = window.supabase.createClient(
 
 
 /* =========================================================
-   CONFIGURAÇÃO DOS ADMINISTRADORES
+   END — SUPABASE
+   ========================================================= */
+
+
+/* =========================================================
+   START — CONFIGURAÇÃO DOS ADMINISTRADORES
    ========================================================= */
 
 const ADMIN_EMAILS = [
@@ -32,7 +37,12 @@ const ADMIN_EMAILS = [
 
 
 /* =========================================================
-   CONFIGURAÇÃO DOS POSTS
+   END — CONFIGURAÇÃO DOS ADMINISTRADORES
+   ========================================================= */
+
+
+/* =========================================================
+   START — CONFIGURAÇÃO DOS POSTS
    ========================================================= */
 
 const POSTS_BUCKET = "post-banners";
@@ -72,7 +82,12 @@ const HEIC_TYPES = [
 
 
 /* =========================================================
-   ELEMENTOS DA PÁGINA
+   END — CONFIGURAÇÃO DOS POSTS
+   ========================================================= */
+
+
+/* =========================================================
+   START — ELEMENTOS DA PÁGINA
    ========================================================= */
 
 const adminPage =
@@ -83,7 +98,12 @@ const postForm =
 
 
 /* =========================================================
-   TELA DE LOGIN
+   END — ELEMENTOS DA PÁGINA
+   ========================================================= */
+
+
+/* =========================================================
+   START — TELA DE LOGIN
    ========================================================= */
 
 function createLoginScreen() {
@@ -188,7 +208,12 @@ function createLoginScreen() {
 
 
 /* =========================================================
-   MOSTRAR / ESCONDER ADMIN
+   END — TELA DE LOGIN
+   ========================================================= */
+
+
+/* =========================================================
+   START — MOSTRAR / ESCONDER ADMIN
    ========================================================= */
 
 function showAdmin() {
@@ -218,7 +243,12 @@ function showLogin() {
 
 
 /* =========================================================
-   LOGIN
+   END — MOSTRAR / ESCONDER ADMIN
+   ========================================================= */
+
+
+/* =========================================================
+   START — LOGIN
    ========================================================= */
 
 async function handleLogin(event) {
@@ -252,6 +282,7 @@ async function handleLogin(event) {
       "Informe seu e-mail e sua senha.";
 
     return;
+
   }
 
 
@@ -263,21 +294,26 @@ async function handleLogin(event) {
     passwordInput.value = "";
 
     return;
+
   }
 
 
   loginButton.disabled = true;
-  loginButton.textContent = "Entrando...";
+
+  loginButton.textContent =
+    "Entrando...";
+
   loginError.textContent = "";
 
 
   const {
     data,
     error
-  } = await supabaseClient.auth.signInWithPassword({
-    email,
-    password
-  });
+  } =
+    await supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
 
 
   if (error) {
@@ -287,16 +323,23 @@ async function handleLogin(event) {
       error
     );
 
+
     loginError.textContent =
       "E-mail ou senha incorretos.";
 
     passwordInput.value = "";
+
     passwordInput.focus();
 
+
     loginButton.disabled = false;
-    loginButton.textContent = "Entrar";
+
+    loginButton.textContent =
+      "Entrar";
+
 
     return;
+
   }
 
 
@@ -310,13 +353,22 @@ async function handleLogin(event) {
       "Não foi possível iniciar a sessão.";
 
     loginButton.disabled = false;
-    loginButton.textContent = "Entrar";
+
+    loginButton.textContent =
+      "Entrar";
+
   }
+
 }
 
 
 /* =========================================================
-   VALIDAÇÃO DO BANNER
+   END — LOGIN
+   ========================================================= */
+
+
+/* =========================================================
+   START — VALIDAÇÃO DO BANNER
    ========================================================= */
 
 function getFileExtension(file) {
@@ -336,7 +388,8 @@ function validateBanner(file) {
 
     return {
       valid: false,
-      message: "Selecione um banner."
+      message:
+        "Selecione um banner."
     };
 
   }
@@ -370,7 +423,9 @@ function validateBanner(file) {
      ------------------------------------------------------- */
 
   if (
-    !ALLOWED_BANNER_EXTENSIONS.includes(extension)
+    !ALLOWED_BANNER_EXTENSIONS.includes(
+      extension
+    )
   ) {
 
     return {
@@ -384,14 +439,16 @@ function validateBanner(file) {
 
   /* -------------------------------------------------------
      MIME
-     
+
      Alguns dispositivos podem não informar o MIME.
      Nesse caso, confiamos na extensão.
      ------------------------------------------------------- */
 
   if (
     file.type &&
-    !ALLOWED_BANNER_TYPES.includes(file.type)
+    !ALLOWED_BANNER_TYPES.includes(
+      file.type
+    )
   ) {
 
     return {
@@ -408,7 +465,8 @@ function validateBanner(file) {
      ------------------------------------------------------- */
 
   if (
-    file.size > MAX_ORIGINAL_BANNER_SIZE
+    file.size >
+    MAX_ORIGINAL_BANNER_SIZE
   ) {
 
     return {
@@ -426,6 +484,16 @@ function validateBanner(file) {
 
 }
 
+
+/* =========================================================
+   END — VALIDAÇÃO DO BANNER
+   ========================================================= */
+
+
+/* =========================================================
+   START — PREPARAÇÃO DO BANNER
+   ========================================================= */
+
 async function prepareBanner(file) {
 
   const extension =
@@ -434,7 +502,7 @@ async function prepareBanner(file) {
 
   /* -------------------------------------------------------
      GIF
-     
+
      Mantemos GIF como GIF para não destruir animações.
      ------------------------------------------------------- */
 
@@ -555,7 +623,8 @@ async function prepareBanner(file) {
        ----------------------------------------------------- */
 
     if (
-      blob.size > MAX_FINAL_BANNER_SIZE
+      blob.size >
+      MAX_FINAL_BANNER_SIZE
     ) {
 
       throw new Error(
@@ -571,7 +640,8 @@ async function prepareBanner(file) {
         `${Date.now()}.webp`,
         {
           type: "image/webp",
-          lastModified: Date.now()
+          lastModified:
+            Date.now()
         }
       );
 
@@ -584,12 +654,23 @@ async function prepareBanner(file) {
 
   } finally {
 
-    URL.revokeObjectURL(objectUrl);
+    URL.revokeObjectURL(
+      objectUrl
+    );
 
   }
 
 }
 
+
+/* =========================================================
+   END — PREPARAÇÃO DO BANNER
+   ========================================================= */
+
+
+/* =========================================================
+   START — CARREGAMENTO DA IMAGEM
+   ========================================================= */
 
 function loadImage(source) {
 
@@ -618,15 +699,22 @@ function loadImage(source) {
       };
 
 
-      image.src = source;
+      image.src =
+        source;
 
     }
   );
 
 }
 
+
 /* =========================================================
-   NOME SEGURO PARA O ARQUIVO
+   END — CARREGAMENTO DA IMAGEM
+   ========================================================= */
+
+
+/* =========================================================
+   START — NOME SEGURO PARA O ARQUIVO
    ========================================================= */
 
 function createSafeFileName(file) {
@@ -634,14 +722,22 @@ function createSafeFileName(file) {
   const originalName =
     file.name
       .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^a-zA-Z0-9._-]/g, "-")
+      .replace(
+        /[\u0300-\u036f]/g,
+        ""
+      )
+      .replace(
+        /[^a-zA-Z0-9._-]/g,
+        "-"
+      )
       .toLowerCase();
 
 
   const extension =
     originalName.includes(".")
-      ? originalName.split(".").pop()
+      ? originalName
+          .split(".")
+          .pop()
       : "jpg";
 
 
@@ -656,11 +752,61 @@ function createSafeFileName(file) {
 
 
   return `${timestamp}-${random}.${extension}`;
+
 }
 
 
 /* =========================================================
-   PUBLICAÇÃO
+   END — NOME SEGURO PARA O ARQUIVO
+   ========================================================= */
+
+
+/* =========================================================
+   START — PREVIEW / ESTADO DO BANNER
+   ========================================================= */
+
+function resetBannerDisplay() {
+
+  const uploadPlaceholder =
+    document.querySelector(
+      ".upload-placeholder"
+    );
+
+
+  if (!uploadPlaceholder) {
+
+    return;
+
+  }
+
+
+  uploadPlaceholder.innerHTML = `
+    <span
+      class="upload-icon"
+      aria-hidden="true"
+    >
+      +
+    </span>
+
+    <strong>
+      Adicionar banner
+    </strong>
+
+    <small>
+      JPG, PNG, WEBP ou GIF · recomendado 600 × 800 px
+    </small>
+  `;
+
+}
+
+
+/* =========================================================
+   END — PREVIEW / ESTADO DO BANNER
+   ========================================================= */
+
+
+/* =========================================================
+   START — PUBLICAÇÃO
    ========================================================= */
 
 async function handlePostSubmit(event) {
@@ -669,7 +815,9 @@ async function handlePostSubmit(event) {
 
 
   const submitButton =
-    postForm.querySelector(".primary-button");
+    postForm.querySelector(
+      ".primary-button"
+    );
 
 
   const title =
@@ -687,7 +835,9 @@ async function handlePostSubmit(event) {
 
 
   const bannerInput =
-    document.getElementById("postBanner");
+    document.getElementById(
+      "postBanner"
+    );
 
 
   const mediaUrl =
@@ -702,20 +852,28 @@ async function handlePostSubmit(event) {
       .getElementById("postType")
       .value;
 
+
   const notifySubscribers =
     document
-      .getElementById("notifySubscribers")
+      .getElementById(
+        "notifySubscribers"
+      )
       ?.checked || false;
 
-    console.log(
-      "Notificar assinantes:",
-      notifySubscribers
-    );
+
+  console.log(
+    "Notificar assinantes:",
+    notifySubscribers
+  );
+
 
   const banner =
     bannerInput.files[0];
 
-  let preparedBanner = null;
+
+  let preparedBanner =
+    null;
+
 
   /* -------------------------------------------------------
      VALIDAÇÕES
@@ -723,29 +881,42 @@ async function handlePostSubmit(event) {
 
   if (!title) {
 
-    alert("Informe um título.");
+    alert(
+      "Informe um título."
+    );
 
     return;
+
   }
 
 
   if (!text) {
 
-    alert("Informe o texto da publicação.");
+    alert(
+      "Informe o texto da publicação."
+    );
 
     return;
+
   }
 
 
   const bannerValidation =
-    validateBanner(banner);
+    validateBanner(
+      banner
+    );
 
 
-  if (!bannerValidation.valid) {
+  if (
+    !bannerValidation.valid
+  ) {
 
-    alert(bannerValidation.message);
+    alert(
+      bannerValidation.message
+    );
 
     return;
+
   }
 
 
@@ -756,7 +927,10 @@ async function handlePostSubmit(event) {
   const {
     data: sessionData,
     error: sessionError
-  } = await supabaseClient.auth.getSession();
+  } =
+    await supabaseClient
+      .auth
+      .getSession();
 
 
   if (
@@ -771,6 +945,7 @@ async function handlePostSubmit(event) {
     showLogin();
 
     return;
+
   }
 
 
@@ -790,7 +965,9 @@ async function handlePostSubmit(event) {
 
   if (
     !userEmail ||
-    !ADMIN_EMAILS.includes(userEmail)
+    !ADMIN_EMAILS.includes(
+      userEmail
+    )
   ) {
 
     alert(
@@ -798,6 +975,7 @@ async function handlePostSubmit(event) {
     );
 
     return;
+
   }
 
 
@@ -805,14 +983,19 @@ async function handlePostSubmit(event) {
      ESTADO DO BOTÃO
      ------------------------------------------------------- */
 
-  submitButton.disabled = true;
+  submitButton.disabled =
+    true;
 
   submitButton.textContent =
     "Publicando...";
 
 
-  let uploadedFilePath = null;
-  let postCreated = false;
+  let uploadedFilePath =
+    null;
+
+  let postCreated =
+    false;
+
 
   try {
 
@@ -825,18 +1008,23 @@ async function handlePostSubmit(event) {
       ----------------------------------------------------- */
 
     const prepared =
-      await prepareBanner(banner);
+      await prepareBanner(
+        banner
+      );
+
 
     preparedBanner =
       prepared.file;
 
 
     /* -----------------------------------------------------
-      2. CRIAR NOME SEGURO
-      ----------------------------------------------------- */
+       2. CRIAR NOME SEGURO
+       ----------------------------------------------------- */
 
     const fileName =
-      createSafeFileName(preparedBanner);
+      createSafeFileName(
+        preparedBanner
+      );
 
 
     uploadedFilePath =
@@ -845,18 +1033,22 @@ async function handlePostSubmit(event) {
 
     const {
       error: uploadError
-    } = await supabaseClient
-      .storage
-      .from(POSTS_BUCKET)
-      .upload(
-        uploadedFilePath,
-        preparedBanner,
-        {
-          cacheControl: "3600",
-          contentType: preparedBanner.type,
-          upsert: false
-        }
-      );
+    } =
+      await supabaseClient
+        .storage
+        .from(POSTS_BUCKET)
+        .upload(
+          uploadedFilePath,
+          preparedBanner,
+          {
+            cacheControl:
+              "3600",
+            contentType:
+              preparedBanner.type,
+            upsert:
+              false
+          }
+        );
 
 
     if (uploadError) {
@@ -864,10 +1056,14 @@ async function handlePostSubmit(event) {
       console.error(
         "Erro ao enviar banner:",
         {
-          message: uploadError.message,
-          name: uploadError.name,
-          statusCode: uploadError.statusCode,
-          error: uploadError
+          message:
+            uploadError.message,
+          name:
+            uploadError.name,
+          statusCode:
+            uploadError.statusCode,
+          error:
+            uploadError
         }
       );
 
@@ -903,6 +1099,7 @@ async function handlePostSubmit(event) {
       throw new Error(
         "Não foi possível obter a URL do banner."
       );
+
     }
 
 
@@ -930,17 +1127,19 @@ async function handlePostSubmit(event) {
 
       created_by:
         user.id
+
     };
 
 
     const {
       data: createdPost,
       error: insertError
-    } = await supabaseClient
-      .from("posts")
-      .insert(postData)
-      .select("id")
-      .single();
+    } =
+      await supabaseClient
+        .from("posts")
+        .insert(postData)
+        .select("id")
+        .single();
 
 
     if (insertError) {
@@ -950,35 +1149,45 @@ async function handlePostSubmit(event) {
         insertError
       );
 
+
       throw new Error(
         "O banner foi enviado, mas não foi possível salvar a publicação."
       );
+
     }
 
-    postCreated = true;
+
+    postCreated =
+      true;
+
 
     /* -----------------------------------------------------
-      4. ENVIAR NEWSLETTER
-      ----------------------------------------------------- */
+       4. ENVIAR NEWSLETTER
+       ----------------------------------------------------- */
 
-    if (notifySubscribers) {
+    if (
+      notifySubscribers
+    ) {
 
       console.log(
         "Enviando Post para a newsletter:",
         createdPost.id
       );
 
+
       const {
         data: newsletterData,
         error: newsletterError
-      } = await supabaseClient.functions.invoke(
-        "send-post-newsletter",
-        {
-          body: {
-            post_id: createdPost.id
+      } =
+        await supabaseClient.functions.invoke(
+          "send-post-newsletter",
+          {
+            body: {
+              post_id:
+                createdPost.id
+            }
           }
-        }
-      );
+        );
 
 
       if (newsletterError) {
@@ -988,10 +1197,12 @@ async function handlePostSubmit(event) {
           newsletterError
         );
 
+
         console.error(
           "Detalhes do disparo:",
           newsletterData
         );
+
 
         throw new Error(
           "O Post foi criado, mas não foi possível enviar a newsletter."
@@ -1012,15 +1223,17 @@ async function handlePostSubmit(event) {
        4. SUCESSO
        ----------------------------------------------------- */
 
-      console.log(
-        "Post criado com sucesso:",
-        createdPost
-      );
+    console.log(
+      "Post criado com sucesso:",
+      createdPost
+    );
 
-      console.log(
-        "ID do Post:",
-        createdPost?.id
-      );
+
+    console.log(
+      "ID do Post:",
+      createdPost?.id
+    );
+
 
     alert(
       "Publicação criada com sucesso! ❤️"
@@ -1030,7 +1243,9 @@ async function handlePostSubmit(event) {
     postForm.reset();
 
     updateTextCounter();
+
     resetBannerDisplay();
+
 
     /* -----------------------------------------------------
        5. ATUALIZAR CONTADOR DO TEXTO
@@ -1052,16 +1267,20 @@ async function handlePostSubmit(event) {
        removemos o banner para evitar arquivo órfão.
     */
 
-  if (uploadedFilePath && !postCreated) {
+    if (
+      uploadedFilePath &&
+      !postCreated
+    ) {
 
       const {
         error: removeError
-      } = await supabaseClient
-        .storage
-        .from(POSTS_BUCKET)
-        .remove([
-          uploadedFilePath
-        ]);
+      } =
+        await supabaseClient
+          .storage
+          .from(POSTS_BUCKET)
+          .remove([
+            uploadedFilePath
+          ]);
 
 
       if (removeError) {
@@ -1084,48 +1303,33 @@ async function handlePostSubmit(event) {
 
   } finally {
 
-    submitButton.disabled = false;
+    submitButton.disabled =
+      false;
 
     submitButton.textContent =
       "Publicar acompanhamento ❤";
-  }
-}
 
-
-
-function resetBannerDisplay() {
-
-  const uploadPlaceholder =
-    document.querySelector(".upload-placeholder");
-
-  if (!uploadPlaceholder) {
-    return;
   }
 
-  uploadPlaceholder.innerHTML = `
-    <span class="upload-icon" aria-hidden="true">
-      +
-    </span>
-
-    <strong>
-      Adicionar banner
-    </strong>
-
-    <small>
-      JPG, PNG, WEBP ou GIF · recomendado 600 × 800 px
-    </small>
-  `;
 }
 
 
 /* =========================================================
-   CONTADOR DO TEXTO
+   END — PUBLICAÇÃO
+   ========================================================= */
+
+
+/* =========================================================
+   START — CONTADOR DO TEXTO
    ========================================================= */
 
 function updateTextCounter() {
 
   const textInput =
-    document.getElementById("postText");
+    document.getElementById(
+      "postText"
+    );
+
 
   const counter =
     document.querySelector(
@@ -1133,18 +1337,29 @@ function updateTextCounter() {
     );
 
 
-  if (!textInput || !counter) {
+  if (
+    !textInput ||
+    !counter
+  ) {
+
     return;
+
   }
 
 
   counter.textContent =
     `${textInput.value.length} / 1000`;
+
 }
 
 
 /* =========================================================
-   OBSERVAR ESTADO DA AUTENTICAÇÃO
+   END — CONTADOR DO TEXTO
+   ========================================================= */
+
+
+/* =========================================================
+   START — OBSERVAR ESTADO DA AUTENTICAÇÃO
    ========================================================= */
 
 supabaseClient.auth.onAuthStateChange(
@@ -1165,7 +1380,12 @@ supabaseClient.auth.onAuthStateChange(
 
 
 /* =========================================================
-   INICIALIZAÇÃO
+   END — OBSERVAR ESTADO DA AUTENTICAÇÃO
+   ========================================================= */
+
+
+/* =========================================================
+   START — INICIALIZAÇÃO
    ========================================================= */
 
 async function initializeAdmin() {
@@ -1173,7 +1393,10 @@ async function initializeAdmin() {
   const {
     data,
     error
-  } = await supabaseClient.auth.getSession();
+  } =
+    await supabaseClient
+      .auth
+      .getSession();
 
 
   if (error) {
@@ -1183,9 +1406,11 @@ async function initializeAdmin() {
       error
     );
 
+
     showLogin();
 
     return;
+
   }
 
 
@@ -1198,11 +1423,17 @@ async function initializeAdmin() {
     showLogin();
 
   }
+
 }
 
 
 /* =========================================================
-   EVENTOS
+   END — INICIALIZAÇÃO
+   ========================================================= */
+
+
+/* =========================================================
+   START — EVENTOS
    ========================================================= */
 
 document.addEventListener(
@@ -1210,12 +1441,16 @@ document.addEventListener(
   (event) => {
 
     if (
-      event.target.id === "loginForm"
+      event.target.id ===
+      "loginForm"
     ) {
 
-      handleLogin(event);
+      handleLogin(
+        event
+      );
 
       return;
+
     }
 
 
@@ -1225,7 +1460,9 @@ document.addEventListener(
       )
     ) {
 
-      handlePostSubmit(event);
+      handlePostSubmit(
+        event
+      );
 
     }
 
@@ -1233,16 +1470,13 @@ document.addEventListener(
 );
 
 
-/* =========================================================
-   CONTADOR DO TEXTAREA
-   ========================================================= */
-
 document.addEventListener(
   "input",
   (event) => {
 
     if (
-      event.target.id === "postText"
+      event.target.id ===
+      "postText"
     ) {
 
       updateTextCounter();
@@ -1258,7 +1492,8 @@ document.addEventListener(
   (event) => {
 
     if (
-      event.target.id === "postBanner"
+      event.target.id ===
+      "postBanner"
     ) {
 
       updateBannerDisplay();
@@ -1268,30 +1503,37 @@ document.addEventListener(
   }
 );
 
+
 /* =========================================================
-   START
+   END — EVENTOS
    ========================================================= */
 
-initializeAdmin();
 
 /* =========================================================
-   ATUALIZAR PREVIEW DO BANNER
+   START — PREVIEW DO BANNER
    ========================================================= */
 
 function updateBannerDisplay() {
 
   const bannerInput =
-    document.getElementById("postBanner");
+    document.getElementById(
+      "postBanner"
+    );
+
 
   const uploadPlaceholder =
-    document.querySelector(".upload-placeholder");
+    document.querySelector(
+      ".upload-placeholder"
+    );
 
 
   if (
     !bannerInput ||
     !uploadPlaceholder
   ) {
+
     return;
+
   }
 
 
@@ -1299,56 +1541,80 @@ function updateBannerDisplay() {
     bannerInput.files[0];
 
 
-const validation =
-  validateBanner(file);
+  const validation =
+    validateBanner(
+      file
+    );
 
 
-if (!validation.valid) {
+  if (
+    !validation.valid
+  ) {
+
+    uploadPlaceholder.innerHTML = `
+      <span
+        class="upload-icon upload-error-icon"
+        aria-hidden="true"
+      >
+        !
+      </span>
+
+      <strong
+        class="upload-error-text"
+      >
+        ${
+          validation.heic
+            ? "Formato HEIC/HEIF"
+            : "Arquivo não permitido"
+        }
+      </strong>
+
+      <small>
+        ${validation.message}
+      </small>
+    `;
+
+
+    return;
+
+  }
+
+
+  const sizeInKB =
+    Math.round(
+      file.size / 1024
+    );
+
+
+  const fileType =
+    file.type
+      ? file.type
+          .split("/")[1]
+          ?.toUpperCase()
+      : getFileExtension(
+          file
+        ).toUpperCase();
+
 
   uploadPlaceholder.innerHTML = `
-    <span class="upload-icon upload-error-icon" aria-hidden="true">
-      !
+    <span
+      class="upload-icon upload-success-icon"
+      aria-hidden="true"
+    >
+      ✓
     </span>
 
-    <strong class="upload-error-text">
-      ${validation.heic ? "Formato HEIC/HEIF" : "Arquivo não permitido"}
+    <strong>
+      ${file.name}
     </strong>
 
     <small>
-      ${validation.message}
+      ${sizeInKB} KB · ${fileType}
+    </small>
+
+    <small class="upload-change">
+      Clique para substituir
     </small>
   `;
-
-  return;
-}
-
-
-const sizeInKB =
-  Math.round(file.size / 1024);
-
-
-const fileType =
-  file.type
-    ? file.type.split("/")[1]?.toUpperCase()
-    : getFileExtension(file).toUpperCase();
-
-
-uploadPlaceholder.innerHTML = `
-  <span class="upload-icon upload-success-icon" aria-hidden="true">
-    ✓
-  </span>
-
-  <strong>
-    ${file.name}
-  </strong>
-
-  <small>
-    ${sizeInKB} KB · ${fileType}
-  </small>
-
-  <small class="upload-change">
-    Clique para substituir
-  </small>
-`;
 
 }
