@@ -750,6 +750,48 @@ function setupUpdatesNavigation() {
 
 }
 
+function handleInitialHash() {
+
+  const hash = window.location.hash;
+
+  const targets = {
+    "#novidades": "updatesList",
+    "#newsletter": "newsletter",
+    "#capitulos": "milestones",
+    "#carinhos": "guestbook"
+  };
+
+  const targetId = targets[hash];
+
+  if (!targetId) {
+    return;
+  }
+
+  const target =
+    document.getElementById(targetId);
+
+  if (!target) {
+    return;
+  }
+
+  requestAnimationFrame(() => {
+
+    const targetRect =
+      target.getBoundingClientRect();
+
+    const topOffset = 40;
+
+    window.scrollTo({
+      top:
+        window.scrollY +
+        targetRect.top -
+        topOffset,
+      behavior: "auto"
+    });
+
+  });
+}
+
 /* =========================================================
    END — ATUALIZAÇÕES / POSTS
    ========================================================= */
@@ -1969,9 +2011,10 @@ updateAge();
 
 loadCurrentPhrase();
 
-renderUpdates();
-
-setupUpdatesNavigation();
+renderUpdates().then(() => {
+  setupUpdatesNavigation();
+  handleInitialHash();
+});
 
 renderComments();
 
