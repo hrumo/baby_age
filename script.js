@@ -755,7 +755,7 @@ function handleInitialHash() {
   const hash = window.location.hash;
 
   const targets = {
-    "#novidades": "updatesList",
+    "#novidades": "updates",
     "#newsletter": "newsletter",
     "#capitulos": "milestones",
     "#carinhos": "guestbook"
