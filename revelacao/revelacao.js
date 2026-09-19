@@ -583,6 +583,12 @@ if (error) {
 // SUCESSO
 // =================================================
 
+// Limpa todos os erros de validação
+limparErros();
+
+// Reseta todos os campos do formulário
+rsvpForm.reset();
+
 rsvpNote.classList.add('is-changing');
 
 setTimeout(() => {

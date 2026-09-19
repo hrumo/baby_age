@@ -665,7 +665,7 @@ img {
    ========================================================= */
 
 .rsvp-note {
-  margin: 12px 4px 0;
+  margin: 20px 50px 0;
 
   color: var(--muted);
 
@@ -709,7 +709,7 @@ img {
 
   overflow: hidden;
 
-  padding: 34px 24px;
+  padding: 100px 24px;
 
   border-radius: var(--radius-lg);
 
@@ -731,8 +731,8 @@ img {
   width: 150px;
   height: 150px;
 
-  top: -85px;
-  right: -55px;
+  top: -75px;
+  right: -35px;
 
   border-radius: 50%;
 
@@ -996,7 +996,7 @@ img {
 
   .closing-content {
     padding:
-      50px 45px;
+      110px 45px;
   }
 
 
