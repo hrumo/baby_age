@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Confirme sua presença no Churras Revelação."
+    >
+
+    <title>Revelação | Gestação Hub</title>
+
+    <!-- Google Fonts -->
+    <meta property="og:image" content="https://brib.baby/images/seo.jpg">
+    <link rel="icon" type="image/webp" href="../images/icon.webp">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="revelacao.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+    <main class="revelacao-page">
+
+        <!-- =====================================================
+             HERO
+        ====================================================== -->
+
+        <section class="hero" aria-labelledby="hero-title">
+
+            <div class="hero-bubbles" aria-hidden="true"></div>
+
+            <div class="hero-content">
+
+                <span class="eyebrow">
+                    UM MOMENTO PARA GUARDAR
+                </span>
+
+                <h1 id="hero-title">
+                    Revelação
+                </h1>
+
+                <p class="hero-subtitle">
+                    Uma pequena celebração para descobrir,
+                    junto com quem amamos, uma das maiores
+                    surpresas das nossas vidas.
+                </p>
+
+                <button
+                    type="button"
+                    class="hero-scroll"
+                    aria-label="Ir para confirmação de presença"
+                    onclick="document.getElementById('rsvp').scrollIntoView({ behavior: 'smooth' })"
+                >
+                    <span class="hero-scroll-icon" aria-hidden="true">↓</span>
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             CONFIRMAÇÃO DE PRESENÇA
+        ====================================================== -->
+
+        <section
+            id="rsvp"
+            class="rsvp section"
+            aria-labelledby="rsvp-title"
+        >
+
+            <div class="section-heading">
+
+                <span class="section-kicker">
+                    VOCÊ FAZ PARTE DISSO TAMBÉM
+                </span>
+
+                <h2 id="rsvp-title">
+                    Confirme sua presença
+                </h2>
+
+                <p>
+                    Queremos muito viver esse momento com você.
+                    Preencha seus dados para confirmar sua presença
+                    em nossa Revelação.
+                </p>
+
+            </div>
+
+
+            <!-- =================================================
+                 FORMULÁRIO
+            ================================================== -->
+
+            <form
+                id="rsvp-form"
+                class="rsvp-form"
+                novalidate
+            >
+
+                <!-- NOME -->
+
+                <div class="field">
+
+                    <label for="nome">
+                        Nome
+                    </label>
+
+                    <input
+                        type="text"
+                        id="nome"
+                        name="nome"
+                        placeholder="Como podemos te chamar?"
+                        autocomplete="name"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- PARENTESCO -->
+
+                <div class="field">
+
+                    <label for="parentesco">
+                        Você é...
+                    </label>
+
+                    <select
+                        id="parentesco"
+                        name="parentesco"
+                        required
+                    >
+
+                        <option value="" selected disabled>
+                            Escolha seu parentesco!
+                        </option>
+
+                        <option value="Mãe">
+                            Mãe
+                        </option>
+
+                        <option value="Pai">
+                            Pai
+                        </option>
+
+                        <option value="Madrinha">
+                            Madrinha ✴️
+                        </option>
+
+                        <option value="Padrinho">
+                            Padrinho ✴️
+                        </option>
+
+                        <option value="Tia">
+                            Tia
+                        </option>
+
+                        <option value="Tio">
+                            Tio
+                        </option>
+
+                        <option value="Tia-avó">
+                            Tia-avó
+                        </option>
+
+                        <option value="Tio-avô">
+                            Tio-avô
+                        </option>
+
+                        <option value="Avó">
+                            Avó
+                        </option>
+
+                        <option value="Avô">
+                            Avô
+                        </option>
+
+                        <option value="Bisavó">
+                            Bisavó
+                        </option>
+
+                        <option value="Bisavô">
+                            Bisavô
+                        </option>
+
+                        <option value="Prima">
+                            Prima
+                        </option>
+
+                        <option value="Primo">
+                            Primo
+                        </option>
+
+                        <option value="Prima-avó">
+                            Prima-avó
+                        </option>
+
+                        <option value="Primo-avô">
+                            Primo-avô
+                        </option>
+
+                        <option value="Amiga da família">
+                            Amiga da família
+                        </option>
+
+                        <option value="Amigo da família">
+                            Amigo da família
+                        </option>
+
+                        <option value="Outro familiar">
+                            Outro familiar
+                        </option>
+
+                        <option value="Outro">
+                            Outro
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="field">
+
+                    <label for="email">
+                        E-mail
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="seuemail@exemplo.com"
+                        autocomplete="email"
+                        required
+                    >
+                </div>
+
+
+                <!-- WHATSAPP -->
+
+                <div class="field">
+
+                    <label for="whatsapp">
+                        WhatsApp
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="whatsapp"
+                        name="whatsapp"
+                        placeholder="(11) 99999-9999"
+                        autocomplete="tel"
+                        inputmode="tel"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- ACOMPANHANTES -->
+
+                <div class="field">
+
+                    <label for="acompanhantes">
+                        Acompanhantes
+                    </label>
+
+                    <select
+                        id="acompanhantes"
+                        name="acompanhantes"
+                        required
+                    >
+
+                        <option value="" selected disabled>
+                            Selecione uma opção
+                        </option>
+
+                        <option value="1">
+                            Irei sozinho(a)
+                        </option>
+
+                        <option value="2">
+                            1 acompanhante
+                        </option>
+
+                        <option value="3">
+                            2 acompanhantes
+                        </option>
+
+                        <option value="4">
+                            3 acompanhantes
+                        </option>
+
+                        <option value="5">
+                            4 acompanhantes
+                        </option>
+
+                        <option value="6">
+                            5 acompanhantes
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- BOTÃO -->
+
+                <button
+                    type="submit"
+                    class="primary-button rsvp-submit"
+                >
+                    <span>
+                        Confirmar presença
+                    </span>
+                </button>
+
+
+                <!-- OBSERVAÇÃO -->
+
+                <p class="form-note">
+                    Sua confirmação nos ajuda a preparar tudo
+                    com muito carinho 🤎
+                </p>
+
+            </form>
+
+
+            <!-- =================================================
+                 MENSAGEM DE SUCESSO
+            ================================================== -->
+
+            <div
+                id="rsvp-success"
+                class="rsvp-message rsvp-success"
+                role="status"
+                aria-live="polite"
+                hidden
+            >
+
+                <span class="rsvp-message-icon" aria-hidden="true">
+                    ✓
+                </span>
+
+                <h3>
+                    Presença confirmada!
+                </h3>
+
+                <p>
+                    Ficamos muito felizes em ter você
+                    com a gente nesse momento tão especial 🤎
+                </p>
+
+            </div>
+
+
+            <!-- =================================================
+                 MENSAGEM DE ERRO
+            ================================================== -->
+
+            <div
+                id="rsvp-error"
+                class="rsvp-message rsvp-error"
+                role="alert"
+                aria-live="assertive"
+                hidden
+            >
+
+                <span class="rsvp-message-icon" aria-hidden="true">
+                    !
+                </span>
+
+                <h3>
+                    Ops! Algo não saiu como esperado.
+                </h3>
+
+                <p>
+                    Não conseguimos registrar sua confirmação.
+                    Tente novamente em alguns instantes.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             MENSAGEM FINAL
+        ====================================================== -->
+
+        <section class="closing-message">
+
+            <div class="closing-content">
+
+                <span class="closing-kicker">
+                    ATÉ LÁ
+                </span>
+
+                <h2>
+                    Estamos ansiosos para<br>
+                    celebrar com você.
+                </h2>
+
+                <p>
+                    Até o grande momento ✨
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             FOOTER
+        ====================================================== -->
+
+        <footer class="footer">
+
+            <span>
+                Com amor,
+            </span>
+
+            <strong>
+                By Papai ❤
+            </strong>
+
+        </footer>
+
+    </main>
+
+<script src="revelacao.js"></script>
+</body>
+</html>
