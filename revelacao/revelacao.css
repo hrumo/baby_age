@@ -195,7 +195,7 @@ img {
 
 .hero-content {
     position: relative;
-    z-index: 2;
+    z-index: 2;   
 }
 
 
@@ -391,6 +391,9 @@ img {
 
   font-size: .9rem;
   line-height: 1.6;
+
+  backdrop-filter: blur(0.75px);
+  -webkit-backdrop-filter: blur(0.75px);
 }
 
 
@@ -661,7 +664,7 @@ img {
    START — OBSERVAÇÃO DO FORMULÁRIO
    ========================================================= */
 
-.form-note {
+.rsvp-note {
   margin: 12px 4px 0;
 
   color: var(--muted);
@@ -672,126 +675,27 @@ img {
   text-align: center;
 }
 
+.rsvp-note {
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.rsvp-note.is-changing {
+    opacity: 0;
+    transform: translateY(-4px);
+}
+
+.rsvp-note.is-success strong {
+    color: var(--terracotta);
+}
+
+.rsvp-note.is-error strong {
+    color: var(--terracotta-dark);
+}
+
 
 /* =========================================================
    END — OBSERVAÇÃO DO FORMULÁRIO
    ========================================================= */
-
-
-/* =========================================================
-   START — MENSAGENS DE STATUS
-   ========================================================= */
-
-.rsvp-message {
-  margin-top: 18px;
-
-  padding: 28px 22px;
-
-  border-radius: var(--radius-lg);
-
-  text-align: center;
-
-  box-shadow: var(--shadow);
-}
-
-
-.rsvp-message-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 46px;
-  height: 46px;
-
-  margin: 0 auto 13px;
-
-  border-radius: 50%;
-
-  font-size: 1.1rem;
-  font-weight: 700;
-}
-
-
-.rsvp-message h3 {
-  margin: 0;
-
-  font-family: "Playfair Display", Georgia, serif;
-
-  font-size: 1.35rem;
-  line-height: 1.15;
-}
-
-
-.rsvp-message p {
-  max-width: 380px;
-
-  margin: 9px auto 0;
-
-  font-size: .8rem;
-  line-height: 1.55;
-}
-
-
-/* Sucesso */
-
-.rsvp-success {
-  border: 1px solid rgba(200, 93, 61, .16);
-
-  background:
-    radial-gradient(
-      circle at 50% 0%,
-      rgba(233, 155, 121, .16),
-      transparent 60%
-    ),
-    var(--paper);
-}
-
-
-.rsvp-success .rsvp-message-icon {
-  background: rgba(200, 93, 61, .10);
-  color: var(--terracotta);
-}
-
-
-.rsvp-success h3 {
-  color: var(--brown);
-}
-
-
-.rsvp-success p {
-  color: var(--muted);
-}
-
-
-/* Erro */
-
-.rsvp-error {
-  border: 1px solid rgba(169, 71, 46, .18);
-
-  background: rgba(200, 93, 61, .06);
-}
-
-
-.rsvp-error .rsvp-message-icon {
-  background: rgba(200, 93, 61, .10);
-  color: var(--terracotta-dark);
-}
-
-
-.rsvp-error h3 {
-  color: var(--terracotta-dark);
-}
-
-
-.rsvp-error p {
-  color: var(--muted);
-}
-
-
-/* =========================================================
-   END — MENSAGENS DE STATUS
-   ========================================================= */
-
 
 /* =========================================================
    START — MENSAGEM FINAL
@@ -805,7 +709,7 @@ img {
 
   margin: 0 auto;
 
-  padding: 55px 0 48px;
+  padding: 30px 0 40px;
 }
 
 
@@ -1008,7 +912,7 @@ img {
       680px
     );
 
-    padding-top: 70px;
+    padding-top: 40px;
     padding-bottom: 60px;
   }
 
@@ -1146,39 +1050,4 @@ img {
    /* =========================================================
    START — SUCESS AND ERROR FORMS
    ========================================================= */
-.rsvp-form {
-    transition:
-        opacity 0.45s ease,
-        transform 0.45s ease;
-}
 
-.rsvp-form.is-submitting {
-    opacity: 0;
-    transform: translateY(-12px);
-}
-
-#rsvp-success,
-#rsvp-error {
-    width: 100%;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    box-sizing: border-box;
-    text-align: center;
-
-    opacity: 0;
-    transform: translateY(18px);
-
-    transition:
-        opacity 0.6s ease,
-        transform 0.6s ease;
-}
-
-#rsvp-success.is-visible,
-#rsvp-error.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-}

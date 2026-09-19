@@ -268,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
          * 45% = aproximadamente metade da tela
          */
 
-        const left = random(82, 96);
+        const left = random(50, 93)
 
 
         // -------------------------------------------------
@@ -416,7 +416,7 @@ const rsvpForm = document.getElementById('rsvp-form');
 
 const parentescoInput = document.getElementById('parentesco');
 const acompanhantesInput = document.getElementById('acompanhantes');
-
+const rsvpNote = document.getElementById('rsvp-note');
 
 // =====================================================
 // MENSAGEM DE ERRO
@@ -567,26 +567,17 @@ if (error) {
 
     console.error('Erro ao salvar RSVP:', error);
 
-    const errorMessage = document.getElementById('rsvp-error');
-    const formHeight = rsvpForm.offsetHeight;
-
-    rsvpForm.style.minHeight = `${formHeight}px`;
-
-    rsvpForm.classList.add('is-submitting');
+    rsvpNote.classList.add('is-changing');
 
     setTimeout(() => {
+        rsvpNote.innerHTML = `
+            <strong>Não conseguimos confirmar sua presença.</strong><br>
+            Tente novamente em alguns instantes.
+        `;
 
-        rsvpForm.hidden = true;
-
-        errorMessage.style.minHeight = `${formHeight}px`;
-
-        errorMessage.hidden = false;
-
-        requestAnimationFrame(() => {
-            errorMessage.classList.add('is-visible');
-        });
-
-    }, 450);
+        rsvpNote.classList.remove('is-changing');
+        rsvpNote.classList.add('is-error');
+    }, 250);
 
     return;
 }
@@ -595,28 +586,17 @@ if (error) {
 // SUCESSO
 // =================================================
 
-const rsvpSection = document.getElementById('rsvp');
-const successMessage = document.getElementById('rsvp-success');
-
-const formHeight = rsvpForm.offsetHeight;
-
-rsvpForm.style.minHeight = `${formHeight}px`;
-
-rsvpForm.classList.add('is-submitting');
+rsvpNote.classList.add('is-changing');
 
 setTimeout(() => {
+    rsvpNote.innerHTML = `
+        <strong>Presença confirmada! ✅</strong><br>
+        Ficamos muito felizes em ter você com a gente nesse momento tão especial.
+    `;
 
-    rsvpForm.hidden = true;
-
-    successMessage.style.minHeight = `${formHeight}px`;
-
-    successMessage.hidden = false;
-
-    requestAnimationFrame(() => {
-        successMessage.classList.add('is-visible');
-    });
-
-}, 450);
+    rsvpNote.classList.remove('is-changing');
+    rsvpNote.classList.add('is-success');
+}, 250);
 
 });
 
