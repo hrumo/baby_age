@@ -669,19 +669,10 @@ img {
 
   color: var(--muted);
 
-  font-size: .68rem;
+  font-size: .75rem;
   line-height: 1.45;
 
   text-align: center;
-}
-
-.rsvp-note {
-    transition: opacity 0.25s ease, transform 0.25s ease;
-}
-
-.rsvp-note.is-changing {
-    opacity: 0;
-    transform: translateY(-4px);
 }
 
 .rsvp-note.is-success strong {
@@ -885,6 +876,10 @@ img {
     font-size: .95rem;
   }
 
+  .hero-subtitle strong {
+    color: var(--terracotta);
+  }
+
 
   .section {
     width: min(
@@ -918,7 +913,7 @@ img {
 
 
   .closing-content {
-    padding: 44px 35px;
+    padding: 100px 35px;
   }
 
 

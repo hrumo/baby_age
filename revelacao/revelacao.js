@@ -567,15 +567,12 @@ if (error) {
 
     console.error('Erro ao salvar RSVP:', error);
 
-    rsvpNote.classList.add('is-changing');
-
     setTimeout(() => {
         rsvpNote.innerHTML = `
-            <strong>Não conseguimos confirmar sua presença.</strong><br>
+            <strong>Não conseguimos confirmar sua presença ❌</strong><br>
             Tente novamente em alguns instantes.
         `;
 
-        rsvpNote.classList.remove('is-changing');
         rsvpNote.classList.add('is-error');
     }, 250);
 
